@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6279c845-92f8-4333-ab99-3d213163593c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TutelMapper</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TileInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\Controls\RadioButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\Controls\_Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\_Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--
+		 Add files present in the shared project folder, excluding the ones
+		 explicitly included in the projitem, so files can be added from vscode
+		 without manipulating the projitem file.
+	-->
+    <Content Include="$(MSBuildThisFileDirectory)FodyWeavers.xml" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\hex_template.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\hex_trees.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile000.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile001.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile002.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile003.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile004.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile005.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile006.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile007.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile008.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile009.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile010.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile011.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile012.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile013.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile014.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile015.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile016.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile017.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile018.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile019.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile020.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile021.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile022.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile023.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile024.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile025.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile026.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile027.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile028.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile029.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile030.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile031.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile032.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile033.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile034.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile035.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile036.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile037.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile038.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile039.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile040.png" />
+    <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </_Globbled_Page>
+    <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.xaml.cs" Exclude="@(Compile)">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </_Globbed_Compile>
+    <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.cs" Exclude="@(Compile);@(_Globbed_Compile)" />
+    <Compile Include="@(_Globbed_Compile)" />
+    <_Globbed_PRIResource Include="$(MSBuildThisFileDirectory)**/*.resw" Exclude="@(PRIResource)" />
+    <PRIResource Include="@(_Globbed_PRIResource)" />
+    <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
+    <Content Include="@(_Globbed_Content)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Util\" />
+  </ItemGroup>
+</Project>

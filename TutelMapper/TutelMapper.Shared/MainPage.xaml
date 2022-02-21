@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="TutelMapper.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TutelMapper"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:skia="using:SkiaSharp.Views.UWP"
+    xmlns:viewModels="using:TutelMapper.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--<StackPanel>
+            <TextBlock>Old Position</TextBlock>
+            <TextBlock Text="{x:Bind WorldPosition, Mode=OneWay}" />
+            <TextBlock>New Offset</TextBlock>
+            <TextBlock Text="{x:Bind NewOffset, Mode=OneWay}" />
+            <TextBlock>Cursor Position</TextBlock>
+            <TextBlock Text="{x:Bind VM.CursorPosition, Mode=OneWay}" />
+        </StackPanel>-->
+        <ScrollViewer Grid.Column="0" Grid.Row="1" Height="Auto" BorderThickness="0,1,0,0" BorderBrush="Black">
+            <GridView ItemsSource="{x:Bind VM.TileLibrary}" Margin="20">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:TileInfo">
+                        <RadioButton
+                            ToolTipService.ToolTip="{x:Bind Name}"
+                            IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                            Style="{ThemeResource TileSelectRadioButtonStyle}"
+                            Width="80px"
+                            Height="80px">
+                            <Image Source="{x:Bind ImagePath, Mode=OneWay}"></Image>
+                        </RadioButton>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </ScrollViewer>
+        <skia:SKXamlCanvas x:Name="Canvas"
+                           Grid.Column="1"
+                           Grid.Row="0"
+                           Grid.RowSpan="2"
+                           PaintSurface="OnPaintSurface"
+                           PointerMoved="OnPointerMoved"
+                           PointerPressed="OnPointerPressed"
+                           PointerReleased="OnPointerReleased"
+                           PointerExited="OnPointerExited"
+                           PointerWheelChanged="OnPointerWheelChanged"
+                           Tapped="OnTapped" />
+    </Grid>
+</Page>
