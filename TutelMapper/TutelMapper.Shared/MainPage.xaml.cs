@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using Barbar.HexGrid;
 using SkiaSharp;
 using SkiaSharp.Views.UWP;
+using TutelMapper.Tools;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
@@ -27,6 +28,8 @@ namespace TutelMapper
         private bool _somethingChanged;
         public event PropertyChangedEventHandler PropertyChanged;
         public MainPageViewModel VM { get; set; } = new MainPageViewModel();
+
+        private BrushTool _brushTool = new BrushTool();
 
         private const float HexSize = 64f;
 
@@ -249,7 +252,8 @@ namespace TutelMapper
             var offsetCoordinates = VM.HexGrid.ToOffsetCoordinates(cubeCoordinates);
             if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < VM.MapData.GetLength(0) && offsetCoordinates.Row < VM.MapData.GetLength(1))
             {
-                VM.MapData[offsetCoordinates.Column, offsetCoordinates.Row] = VM.SelectedTile.Name;
+                _brushTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack);
+                //VM.MapData[offsetCoordinates.Column, offsetCoordinates.Row] = VM.SelectedTile.Name;
             }
         }
     }

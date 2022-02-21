@@ -15,12 +15,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Annotaions\Annotations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ICommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\BrushTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\ITool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TileInfo.cs" />
@@ -116,8 +122,5 @@
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
     <Content Include="@(_Globbed_Content)" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Util\" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,4 @@
-﻿using System;
-using Windows.UI.Xaml;
-
-namespace TutelMapper.Wasm
+﻿namespace TutelMapper.Wasm
 {
     public class Program
     {

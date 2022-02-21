@@ -7,46 +7,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:skia="using:SkiaSharp.Views.UWP"
     xmlns:viewModels="using:TutelMapper.ViewModels"
+    xmlns:commands="using:TutelMapper.Commands"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="200" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
             <ColumnDefinition />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
-        <!--<StackPanel>
-            <TextBlock>Old Position</TextBlock>
-            <TextBlock Text="{x:Bind WorldPosition, Mode=OneWay}" />
-            <TextBlock>New Offset</TextBlock>
-            <TextBlock Text="{x:Bind NewOffset, Mode=OneWay}" />
-            <TextBlock>Cursor Position</TextBlock>
-            <TextBlock Text="{x:Bind VM.CursorPosition, Mode=OneWay}" />
-        </StackPanel>-->
-        <ScrollViewer Grid.Column="0" Grid.Row="1" Height="Auto" BorderThickness="0,1,0,0" BorderBrush="Black">
-            <GridView ItemsSource="{x:Bind VM.TileLibrary}" Margin="20">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TileInfo">
-                        <RadioButton
-                            ToolTipService.ToolTip="{x:Bind Name}"
-                            IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
-                            Style="{ThemeResource TileSelectRadioButtonStyle}"
-                            Width="80px"
-                            Height="80px">
-                            <Image Source="{x:Bind ImagePath, Mode=OneWay}"></Image>
-                        </RadioButton>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-        </ScrollViewer>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <!--<StackPanel>
+                <TextBlock>Old Position</TextBlock>
+                <TextBlock Text="{x:Bind WorldPosition, Mode=OneWay}" />
+                <TextBlock>New Offset</TextBlock>
+                <TextBlock Text="{x:Bind NewOffset, Mode=OneWay}" />
+                <TextBlock>Cursor Position</TextBlock>
+                <TextBlock Text="{x:Bind VM.CursorPosition, Mode=OneWay}" />
+            </StackPanel>-->
+            <ScrollViewer Grid.Column="0" Grid.Row="1" Height="Auto" BorderThickness="0,1,0,0" BorderBrush="Black">
+                <GridView ItemsSource="{x:Bind VM.TileLibrary}" Margin="20">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:TileInfo">
+                            <RadioButton
+                                ToolTipService.ToolTip="{x:Bind Name}"
+                                IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                                Style="{ThemeResource TileSelectRadioButtonStyle}"
+                                Width="80px"
+                                Height="80px">
+                                <Image Source="{x:Bind ImagePath, Mode=OneWay}"></Image>
+                            </RadioButton>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </ScrollViewer>
+        </Grid>
         <skia:SKXamlCanvas x:Name="Canvas"
                            Grid.Column="1"
                            Grid.Row="0"
-                           Grid.RowSpan="2"
                            PaintSurface="OnPaintSurface"
                            PointerMoved="OnPointerMoved"
                            PointerPressed="OnPointerPressed"
@@ -54,5 +57,22 @@
                            PointerExited="OnPointerExited"
                            PointerWheelChanged="OnPointerWheelChanged"
                            Tapped="OnTapped" />
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="300" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Button Content="Undo" Click="{x:Bind VM.Undo}"/>
+                <Button Content="Redo" Click="{x:Bind VM.Redo}"/>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1">
+                <ListView ItemsSource="{x:Bind VM.UndoStack.Stack}" Margin="10">
+                    <!--<ListView.ItemTemplate>
+                        <DataTemplate x:DataType="commands:ICommand"></DataTemplate>
+                    </ListView.ItemTemplate>-->
+                </ListView>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Page>

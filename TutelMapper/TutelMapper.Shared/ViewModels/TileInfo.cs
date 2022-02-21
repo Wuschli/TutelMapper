@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Windows.UI.Xaml;
 using SkiaSharp;
 
 namespace TutelMapper.ViewModels
