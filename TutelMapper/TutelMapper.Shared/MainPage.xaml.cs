@@ -114,9 +114,6 @@ namespace TutelMapper
                 TextSize = 12
             };
 
-            //canvas.DrawText($"SkiaSharp", coord, paint);
-            //canvas.DrawCircle(VM.CursorPosition, 10, paint);
-
             var gridPaint = new SKPaint
             {
                 Color = SKColors.Black,
