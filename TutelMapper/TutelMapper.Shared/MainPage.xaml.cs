@@ -29,14 +29,13 @@ namespace TutelMapper
         private bool _pageIsActive;
         private bool _somethingChanged;
 
-        private readonly BrushTool _brushTool = new BrushTool();
-
         private const float HexSize = 64f;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MainPageViewModel VM { get; } = new MainPageViewModel();
         public uint? DraggingPointer { get; private set; }
+        public uint? PaintingPointer { get; private set; }
         public ObservableCollection<PointerInfo> Pointers { get; } = new ObservableCollection<PointerInfo>();
 
         public MainPage()
@@ -44,6 +43,8 @@ namespace TutelMapper
             InitializeComponent();
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
             VM.MapData = new string[40, 40];
+            VM.SelectedTool = new BrushTool();
+
             VM.PropertyChanged += (_, __) => _somethingChanged = true;
             HistoryListView.SizeChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
         }
@@ -211,6 +212,11 @@ namespace TutelMapper
                 VM.Offset += newPosition - pointerInfo.Position;
             }
 
+            if (PaintingPointer == pointer.PointerId)
+            {
+                ExecuteSelectedToolAt(pointer.Position.ToSKPoint(), true);
+            }
+
             pointerInfo.Position = newPosition;
             _somethingChanged = true;
         }
@@ -241,7 +247,9 @@ namespace TutelMapper
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(Canvas);
-            if (!e.GetCurrentPoint(Canvas).Properties.IsLeftButtonPressed)
+            if (pointer.PointerDevice.PointerDeviceType != PointerDeviceType.Touch && pointer.Properties.IsLeftButtonPressed)
+                PaintingPointer = pointer.PointerId;
+            else
                 DraggingPointer = pointer.PointerId;
         }
 
@@ -250,6 +258,9 @@ namespace TutelMapper
             var pointer = e.GetCurrentPoint(Canvas);
             if (pointer.PointerId == DraggingPointer)
                 DraggingPointer = null;
+
+            if (pointer.PointerId == PaintingPointer)
+                PaintingPointer = null;
         }
 
         private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -282,12 +293,21 @@ namespace TutelMapper
 
             var point = e.GetPosition(Canvas).ToSKPoint();
 
+            ExecuteSelectedToolAt(point);
+        }
+
+        private void ExecuteSelectedToolAt(SKPoint point, bool isDrag = false)
+        {
+            if (VM.SelectedTile == null)
+                return;
+            if (!VM.SelectedTool.CanUseOnDrag && isDrag)
+                return;
             var adjustedCursorPosition = new SKPoint((point.X - VM.Offset.X) / VM.Zoom, (point.Y - VM.Offset.Y) / VM.Zoom);
             var cubeCoordinates = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
             var offsetCoordinates = VM.HexGrid.ToOffsetCoordinates(cubeCoordinates);
             if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < VM.MapData.GetLength(0) && offsetCoordinates.Row < VM.MapData.GetLength(1))
             {
-                _brushTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
+                VM.SelectedTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
                     .ContinueWith(_ => _somethingChanged = true);
             }
         }

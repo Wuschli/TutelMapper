@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Barbar.HexGrid;
 using SkiaSharp;
 using TutelMapper.Annotations;
+using TutelMapper.Tools;
 using TutelMapper.Util;
 
 namespace TutelMapper.ViewModels
@@ -20,6 +21,7 @@ namespace TutelMapper.ViewModels
         public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
         public string[,] MapData { get; set; }
         public TileInfo SelectedTile => TileLibrary.FirstOrDefault(info => info.IsSelected);
+        public ITool SelectedTool { get; set; }
         public UndoStack UndoStack { get; } = new UndoStack();
 
         public async Task Undo()
