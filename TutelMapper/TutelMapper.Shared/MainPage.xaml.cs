@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.Graphics.Display;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Barbar.HexGrid;
 using SkiaSharp;
 using SkiaSharp.Views.UWP;
+using TutelMapper.Annotations;
 using TutelMapper.Tools;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
@@ -21,17 +24,20 @@ namespace TutelMapper
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, INotifyPropertyChanged
+    public sealed partial class MainPage : INotifyPropertyChanged
     {
-        private bool _dragging;
         private bool _pageIsActive;
         private bool _somethingChanged;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public MainPageViewModel VM { get; } = new MainPageViewModel();
 
         private readonly BrushTool _brushTool = new BrushTool();
 
         private const float HexSize = 64f;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public MainPageViewModel VM { get; } = new MainPageViewModel();
+        public uint? DraggingPointer { get; private set; }
+        public ObservableCollection<PointerInfo> Pointers { get; } = new ObservableCollection<PointerInfo>();
 
         public MainPage()
         {
@@ -39,7 +45,6 @@ namespace TutelMapper
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
             VM.MapData = new string[40, 40];
             VM.PropertyChanged += (_, __) => _somethingChanged = true;
-            //VM.UndoStack.Stack.CollectionChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
             HistoryListView.SizeChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
         }
 
@@ -62,7 +67,7 @@ namespace TutelMapper
             }
 
             _pageIsActive = true;
-            DrawLoop();
+            _ = DrawLoop();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -120,31 +125,25 @@ namespace TutelMapper
                 Style = SKPaintStyle.Stroke
             };
 
-            var gridHoveredPaint = new SKPaint
-            {
-                Color = SKColors.LightGray,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                BlendMode = SKBlendMode.Multiply
-            };
-
             canvas.Translate(VM.Offset);
             canvas.Scale(VM.Zoom);
 
             // draw hex grid
-            var adjustedCursorPosition = new SKPoint((VM.CursorPosition.X - VM.Offset.X) / VM.Zoom, (VM.CursorPosition.Y - VM.Offset.Y) / VM.Zoom);
-            var hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
+            var pointerInfo = Pointers.FirstOrDefault();
+            var hoveredHex = new CubeCoordinates(-1, -1, -1);
+            if (pointerInfo != null && pointerInfo.Type != PointerDeviceType.Touch)
+            {
+                var adjustedCursorPosition = new SKPoint((pointerInfo.Position.X - VM.Offset.X) / VM.Zoom, (pointerInfo.Position.Y - VM.Offset.Y) / VM.Zoom);
+                hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
+            }
 
             for (int column = 0; column < VM.MapData.GetLength(0); column++)
             for (int row = 0; row < VM.MapData.GetLength(1); row++)
             {
                 var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
                 var vertices = VM.HexGrid.PolygonCorners(cubeCoordinates);
-                var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
                 var path = new SKPath();
                 path.AddPoly(vertices.ToArray());
-                if (hovered)
-                    canvas.DrawPath(path, gridHoveredPaint);
                 canvas.DrawPath(path, gridPaint);
             }
 
@@ -200,19 +199,31 @@ namespace TutelMapper
 
         private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            var newPosition = e.GetCurrentPoint(Canvas).Position.ToSKPoint();
+            var pointer = e.GetCurrentPoint(Canvas);
+            var newPosition = pointer.Position.ToSKPoint();
+            var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
 
-            if (_dragging)
+            if (pointerInfo == null)
+                return;
+
+            if (DraggingPointer == pointer.PointerId)
             {
-                VM.Offset += newPosition - VM.CursorPosition;
+                VM.Offset += newPosition - pointerInfo.Position;
             }
 
-            VM.CursorPosition = newPosition;
+            pointerInfo.Position = newPosition;
+            _somethingChanged = true;
         }
 
         private void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            var delta = e.GetCurrentPoint(Canvas).Properties.MouseWheelDelta;
+            var pointer = e.GetCurrentPoint(Canvas);
+            var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
+            if (pointerInfo == null)
+                return;
+
+            var delta = pointer.Properties.MouseWheelDelta;
+
             var zoom = VM.Zoom + delta * 0.001f;
             if (zoom < 0.05f)
                 zoom = 0.05f;
@@ -220,8 +231,8 @@ namespace TutelMapper
                 zoom = 3;
 
             // zoom to mouse pointer
-            var worldPosition = new SKPoint((VM.CursorPosition.X - VM.Offset.X) / VM.Zoom, (VM.CursorPosition.Y - VM.Offset.Y) / VM.Zoom);
-            var newOffset = new SKPoint((worldPosition.X * zoom - VM.CursorPosition.X) * -1f, (worldPosition.Y * zoom - VM.CursorPosition.Y) * -1f);
+            var worldPosition = new SKPoint((pointerInfo.Position.X - VM.Offset.X) / VM.Zoom, (pointerInfo.Position.Y - VM.Offset.Y) / VM.Zoom);
+            var newOffset = new SKPoint((worldPosition.X * zoom - pointerInfo.Position.X) * -1f, (worldPosition.Y * zoom - pointerInfo.Position.Y) * -1f);
             VM.Offset = newOffset;
 
             VM.Zoom = zoom;
@@ -229,17 +240,39 @@ namespace TutelMapper
 
         private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _dragging = true;
+            var pointer = e.GetCurrentPoint(Canvas);
+            if (!e.GetCurrentPoint(Canvas).Properties.IsLeftButtonPressed)
+                DraggingPointer = pointer.PointerId;
         }
 
         private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            _dragging = false;
+            var pointer = e.GetCurrentPoint(Canvas);
+            if (pointer.PointerId == DraggingPointer)
+                DraggingPointer = null;
+        }
+
+        private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(Canvas);
+            Pointers.Add(new PointerInfo(pointer.PointerId, pointer.PointerDevice.PointerDeviceType)
+            {
+                Position = pointer.Position.ToSKPoint()
+            });
+            if (e.GetCurrentPoint(Canvas).PointerDevice.PointerDeviceType == PointerDeviceType.Touch)
+                DraggingPointer = pointer.PointerId;
         }
 
         private void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            _dragging = false;
+            var pointer = e.GetCurrentPoint(Canvas);
+
+            var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
+            if (pointerInfo != null)
+                Pointers.Remove(pointerInfo);
+
+            if (pointer.PointerId == DraggingPointer)
+                DraggingPointer = null;
         }
 
         private void OnTapped(object sender, TappedRoutedEventArgs e)
@@ -254,9 +287,16 @@ namespace TutelMapper
             var offsetCoordinates = VM.HexGrid.ToOffsetCoordinates(cubeCoordinates);
             if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < VM.MapData.GetLength(0) && offsetCoordinates.Row < VM.MapData.GetLength(1))
             {
-                _brushTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack);
-                //VM.MapData[offsetCoordinates.Column, offsetCoordinates.Row] = VM.SelectedTile.Name;
+                _brushTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
+                    .ContinueWith(_ => _somethingChanged = true);
             }
+        }
+
+        [NotifyPropertyChangedInvocator]
+        [UsedImplicitly]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

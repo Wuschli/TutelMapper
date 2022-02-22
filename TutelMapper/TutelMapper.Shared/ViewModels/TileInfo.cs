@@ -6,6 +6,7 @@ namespace TutelMapper.ViewModels
     public class TileInfo : INotifyPropertyChanged
     {
         private SKImage _image;
+        public event PropertyChangedEventHandler PropertyChanged;
         public string Name { get; set; }
         public string ImagePath { get; set; }
 
@@ -24,7 +25,5 @@ namespace TutelMapper.ViewModels
 
         public bool IsSelected { get; set; }
         public float AspectRatio => Image.Height / (float)Image.Width;
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

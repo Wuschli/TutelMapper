@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PointerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TileInfo.cs" />
   </ItemGroup>
   <ItemGroup>

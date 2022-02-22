@@ -22,14 +22,19 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <!--<StackPanel>
-                <TextBlock>Old Position</TextBlock>
-                <TextBlock Text="{x:Bind WorldPosition, Mode=OneWay}" />
-                <TextBlock>New Offset</TextBlock>
-                <TextBlock Text="{x:Bind NewOffset, Mode=OneWay}" />
-                <TextBlock>Cursor Position</TextBlock>
-                <TextBlock Text="{x:Bind VM.CursorPosition, Mode=OneWay}" />
-            </StackPanel>-->
+            <ScrollViewer>
+                <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:PointerInfo">
+                            <TextBlock Text="{x:Bind Position, Mode=OneWay}"></TextBlock>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--<StackPanel>
+                    <TextBlock>Dragging Pointer</TextBlock>
+                    <TextBlock Text="{x:Bind DraggingPointer, Mode=OneWay}" />
+                </StackPanel>-->
+            </ScrollViewer>
             <ScrollViewer Grid.Column="0" Grid.Row="1" Height="Auto" BorderThickness="0,1,0,0" BorderBrush="Black">
                 <GridView ItemsSource="{x:Bind VM.TileLibrary}" Margin="20">
                     <GridView.ItemTemplate>
@@ -54,6 +59,7 @@
                            PointerMoved="OnPointerMoved"
                            PointerPressed="OnPointerPressed"
                            PointerReleased="OnPointerReleased"
+                           PointerEntered="OnPointerEntered"
                            PointerExited="OnPointerExited"
                            PointerWheelChanged="OnPointerWheelChanged"
                            Tapped="OnTapped" />

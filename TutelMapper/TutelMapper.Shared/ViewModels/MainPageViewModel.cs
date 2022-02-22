@@ -14,7 +14,6 @@ namespace TutelMapper.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SKPoint CursorPosition { get; set; }
         public float Zoom { get; set; } = 1f;
         public SKPoint Offset { get; set; } = new SKPoint(96f, 160f);
         public ObservableCollection<TileInfo> TileLibrary { get; } = new ObservableCollection<TileInfo>();

@@ -19,6 +19,7 @@
     <_Globbed_Compile Remove="Tools\BrushTool.cs" />
     <_Globbed_Compile Remove="Tools\ITool.cs" />
     <_Globbed_Compile Remove="Util\UndoStack.cs" />
+    <_Globbed_Compile Remove="ViewModels\PointerInfo.cs" />
     <_Globbed_Compile Remove="ViewModels\SkPointPolicy.cs" />
   </ItemGroup>
   <ItemGroup>
