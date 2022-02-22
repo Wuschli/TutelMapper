@@ -21,6 +21,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ICommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -32,6 +33,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Converters\_Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

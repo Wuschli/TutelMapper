@@ -63,14 +63,29 @@
                 <RowDefinition Height="300" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
-                <Button Content="Undo" Click="{x:Bind VM.Undo}"/>
-                <Button Content="Redo" Click="{x:Bind VM.Redo}"/>
+                <Button Content="Undo" Click="{x:Bind VM.Undo}" />
+                <Button Content="Redo" Click="{x:Bind VM.Redo}" />
             </StackPanel>
-            <ScrollViewer Grid.Row="1">
-                <ListView ItemsSource="{x:Bind VM.UndoStack.Stack}" Margin="10">
-                    <!--<ListView.ItemTemplate>
-                        <DataTemplate x:DataType="commands:ICommand"></DataTemplate>
-                    </ListView.ItemTemplate>-->
+            <ScrollViewer Grid.Row="1" Name="HistoryScrollViewer" VerticalContentAlignment="Bottom"
+                          VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible" VerticalScrollMode="Enabled">
+                <ListView Name="HistoryListView"
+                          ItemsSource="{x:Bind VM.UndoStack.Stack}"
+                          Margin="10"
+                          SelectionMode="None">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="MinHeight" Value="0" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="commands:ICommand">
+                            <TextBlock Margin="0" Padding="0" Height="Auto" LineHeight="20" Text="{x:Bind ToString()}"
+                                       Foreground="{Binding IsApplied, Converter= {StaticResource HistoryIsAppliedConverter}}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </ScrollViewer>
         </Grid>

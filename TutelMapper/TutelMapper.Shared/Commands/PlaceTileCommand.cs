@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using TutelMapper.ViewModels;
 
@@ -13,6 +14,8 @@ namespace TutelMapper.Commands
 
         private string _previousTile;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public PlaceTileCommand(string[,] target, int x, int y, TileInfo tileInfo)
         {
             _target = target ?? throw new ArgumentNullException(nameof(target));
@@ -21,16 +24,24 @@ namespace TutelMapper.Commands
             _y = y;
         }
 
+        public bool IsApplied { get; private set; }
+
         public Task Do()
         {
+            if (IsApplied)
+                return Task.CompletedTask;
             _previousTile = _target[_x, _y];
             _target[_x, _y] = _tileInfo.Name;
+            IsApplied = true;
             return Task.CompletedTask;
         }
 
         public Task Undo()
         {
+            if (!IsApplied)
+                return Task.CompletedTask;
             _target[_x, _y] = _previousTile;
+            IsApplied = false;
             return Task.CompletedTask;
         }
 

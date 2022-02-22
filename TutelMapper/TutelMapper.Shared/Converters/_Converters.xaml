@@ -1,0 +1,10 @@
+﻿<ResourceDictionary
+    x:Class="TutelMapper.Converters.Converters"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="using:System"
+    xmlns:commands="using:TutelMapper.Commands"
+    xmlns:converters="using:TutelMapper.Converters">
+
+    <converters:HistoryIsAppliedConverter x:Key="HistoryIsAppliedConverter" />
+</ResourceDictionary>

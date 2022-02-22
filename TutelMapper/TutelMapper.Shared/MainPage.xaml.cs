@@ -27,9 +27,9 @@ namespace TutelMapper
         private bool _pageIsActive;
         private bool _somethingChanged;
         public event PropertyChangedEventHandler PropertyChanged;
-        public MainPageViewModel VM { get; set; } = new MainPageViewModel();
+        public MainPageViewModel VM { get; } = new MainPageViewModel();
 
-        private BrushTool _brushTool = new BrushTool();
+        private readonly BrushTool _brushTool = new BrushTool();
 
         private const float HexSize = 64f;
 
@@ -39,6 +39,8 @@ namespace TutelMapper
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
             VM.MapData = new string[40, 40];
             VM.PropertyChanged += (_, __) => _somethingChanged = true;
+            //VM.UndoStack.Stack.CollectionChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
+            HistoryListView.SizeChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
