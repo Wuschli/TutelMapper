@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using TutelMapper.Annotations;
 using TutelMapper.ViewModels;
 
 namespace TutelMapper.Commands
@@ -48,6 +50,13 @@ namespace TutelMapper.Commands
         public override string ToString()
         {
             return $"Place {_tileInfo.Name} at [{_x}|{_y}]";
+        }
+
+        [NotifyPropertyChangedInvocator]
+        [UsedImplicitly]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

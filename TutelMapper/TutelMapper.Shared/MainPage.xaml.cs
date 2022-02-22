@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Barbar.HexGrid;
@@ -17,14 +18,11 @@ using TutelMapper.Tools;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+// ReSharper disable RedundantExtendsListEntry
 
 namespace TutelMapper
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : INotifyPropertyChanged
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private bool _pageIsActive;
         private bool _somethingChanged;

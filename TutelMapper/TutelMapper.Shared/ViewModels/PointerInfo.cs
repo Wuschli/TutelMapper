@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.Devices.Input;
 using SkiaSharp;
+using TutelMapper.Annotations;
 
 namespace TutelMapper.ViewModels
 {
@@ -20,6 +22,13 @@ namespace TutelMapper.ViewModels
         public override string ToString()
         {
             return $"{PointerId}: {Position}";
+        }
+
+        [NotifyPropertyChangedInvocator]
+        [UsedImplicitly]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

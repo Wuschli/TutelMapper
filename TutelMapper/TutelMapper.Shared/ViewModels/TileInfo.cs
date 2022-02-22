@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SkiaSharp;
+using TutelMapper.Annotations;
 
 namespace TutelMapper.ViewModels
 {
@@ -25,5 +27,12 @@ namespace TutelMapper.ViewModels
 
         public bool IsSelected { get; set; }
         public float AspectRatio => Image.Height / (float)Image.Width;
+
+        [NotifyPropertyChangedInvocator]
+        [UsedImplicitly]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

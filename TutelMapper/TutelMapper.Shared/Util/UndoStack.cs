@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using TutelMapper.Annotations;
 using TutelMapper.Commands;
 
 namespace TutelMapper.Util
@@ -39,6 +41,13 @@ namespace TutelMapper.Util
             var command = Stack[StackPointer + 1];
             await command.Do();
             StackPointer++;
+        }
+
+        [NotifyPropertyChangedInvocator]
+        [UsedImplicitly]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
