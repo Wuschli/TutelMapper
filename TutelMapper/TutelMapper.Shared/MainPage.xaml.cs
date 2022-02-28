@@ -26,6 +26,7 @@ namespace TutelMapper
     {
         private bool _pageIsActive;
         private bool _somethingChanged;
+        private Task _drawLoop;
 
         private const float HexSize = 64f;
 
@@ -52,21 +53,25 @@ namespace TutelMapper
             base.OnNavigatedTo(e);
 
             var tilesPath = Path.Combine("Tiles");
-            foreach (var tileFile in Directory.EnumerateFiles(tilesPath, "*.png", SearchOption.AllDirectories))
+            if (Directory.Exists(tilesPath))
             {
-                var tileName = tileFile;
-                if (Path.HasExtension(tileName))
-                    tileName = tileName.Substring(0, tileName.Length - Path.GetExtension(tileFile).Length);
-                tileName = tileName.Substring(tilesPath.Length + 1);
-                VM.TileLibrary.Add(new TileInfo
+                foreach (var tileFile in Directory.EnumerateFiles(tilesPath, "*.png", SearchOption.AllDirectories))
                 {
-                    Name = tileName,
-                    ImagePath = tileFile
-                });
+                    var tileName = tileFile;
+                    if (Path.HasExtension(tileName))
+                        tileName = tileName.Substring(0, tileName.Length - Path.GetExtension(tileFile).Length);
+                    tileName = tileName.Substring(tilesPath.Length + 1);
+                    VM.TileLibrary.Add(new TileInfo
+                    {
+                        Name = tileName,
+                        ImagePath = tileFile
+                    });
+                }
             }
+            // TODO handle non existent Tiles directory
 
             _pageIsActive = true;
-            _ = DrawLoop();
+            _drawLoop = DrawLoop();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -30,10 +30,6 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <!--<StackPanel>
-                    <TextBlock>Dragging Pointer</TextBlock>
-                    <TextBlock Text="{x:Bind DraggingPointer, Mode=OneWay}" />
-                </StackPanel>-->
             </ScrollViewer>
             <ScrollViewer Grid.Column="0" Grid.Row="1" Height="Auto" BorderThickness="0,1,0,0" BorderBrush="Black">
                 <GridView ItemsSource="{x:Bind VM.TileLibrary}" Margin="20">
