@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using TutelMapper.Util;
 
 namespace TutelMapper
 {
@@ -14,6 +15,9 @@ namespace TutelMapper
     public sealed partial class App : Application
     {
         private Window _window;
+
+        public static MapStorage MapStorage { get; } = new MapStorage();
+        public static TileLibrary TileLibrary { get; } = new TileLibrary();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -80,8 +84,9 @@ namespace TutelMapper
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
+                    rootFrame.Navigate(typeof(OverviewPage), args.Arguments);
                 }
+
                 // Ensure the current window is active
                 _window.Activate();
             }
@@ -169,6 +174,17 @@ namespace TutelMapper
 #if HAS_UNO
 			global::Uno.UI.Adapter.Microsoft.Extensions.Logging.LoggingAdapter.Initialize();
 #endif
+        }
+
+        public static bool TryGoBack()
+        {
+            if (Window.Current.Content is Frame rootFrame && rootFrame.CanGoBack)
+            {
+                rootFrame.GoBack();
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Graphics.Display;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -22,56 +22,40 @@ using TutelMapper.ViewModels;
 
 namespace TutelMapper
 {
-    public sealed partial class MainPage : Page, INotifyPropertyChanged
+    public sealed partial class EditorPage : Page, INotifyPropertyChanged
     {
         private bool _pageIsActive;
         private bool _somethingChanged;
-        private Task _drawLoop;
 
         private const float HexSize = 64f;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainPageViewModel VM { get; } = new MainPageViewModel();
         public uint? DraggingPointer { get; private set; }
         public uint? PaintingPointer { get; private set; }
         public ObservableCollection<PointerInfo> Pointers { get; } = new ObservableCollection<PointerInfo>();
+        public TileLibrary TileLibrary => App.TileLibrary;
 
-        public MainPage()
+        public EditorPage()
         {
             InitializeComponent();
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
             VM.MapData = new string[40, 40];
             VM.SelectedTool = new BrushTool();
 
-            VM.PropertyChanged += (_, __) => _somethingChanged = true;
-            HistoryListView.SizeChanged += (_, __) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
+            VM.PropertyChanged += (_, _) => _somethingChanged = true;
+            HistoryListView.SizeChanged += (_, _) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            var tilesPath = Path.Combine("Tiles");
-            if (Directory.Exists(tilesPath))
-            {
-                foreach (var tileFile in Directory.EnumerateFiles(tilesPath, "*.png", SearchOption.AllDirectories))
-                {
-                    var tileName = tileFile;
-                    if (Path.HasExtension(tileName))
-                        tileName = tileName.Substring(0, tileName.Length - Path.GetExtension(tileFile).Length);
-                    tileName = tileName.Substring(tilesPath.Length + 1);
-                    VM.TileLibrary.Add(new TileInfo
-                    {
-                        Name = tileName,
-                        ImagePath = tileFile
-                    });
-                }
-            }
-            // TODO handle non existent Tiles directory
+            App.TileLibrary.Load();
 
             _pageIsActive = true;
-            _drawLoop = DrawLoop();
+            _ = DrawLoop();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -173,23 +157,22 @@ namespace TutelMapper
             var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
             var rect = new SKRect(pixelCoordinates.X - HexSize, pixelCoordinates.Y - HexSize, pixelCoordinates.X + HexSize, pixelCoordinates.Y + HexSize);
 
-
             if (hovered && VM.SelectedTile != null)
             {
                 var fillRect = rect.AspectFill(new SKSize(HexSize, HexSize * VM.SelectedTile.AspectRatio));
                 var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + HexSize);
                 fillRect.Location -= new SKPoint(0, verticalOffset);
-                canvas.DrawImage(VM.SelectedTile.Image, fillRect);
+                canvas.DrawImage(VM.SelectedTile.SkiaImage, fillRect);
             }
             else if (!string.IsNullOrEmpty(tileName))
             {
-                var tileInfo = VM.TileLibrary.FirstOrDefault(info => info.Name == tileName);
+                var tileInfo = App.TileLibrary.GetTile(tileName);
                 if (tileInfo != null)
                 {
                     var fillRect = rect.AspectFill(new SKSize(HexSize, HexSize * tileInfo.AspectRatio));
                     var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + HexSize);
                     fillRect.Location -= new SKPoint(0, verticalOffset);
-                    canvas.DrawImage(tileInfo.Image, fillRect);
+                    canvas.DrawImage(tileInfo.SkiaImage, fillRect);
                 }
                 else
                 {
@@ -221,7 +204,7 @@ namespace TutelMapper
             _somethingChanged = true;
         }
 
-        private void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        private void OnPointerWheelScrolled(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(Canvas);
             var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
@@ -300,6 +283,8 @@ namespace TutelMapper
         {
             if (VM.SelectedTile == null)
                 return;
+            if (VM.SelectedTool == null)
+                return;
             if (!VM.SelectedTool.CanUseOnDrag && isDrag)
                 return;
             var adjustedCursorPosition = new SKPoint((point.X - VM.Offset.X) / VM.Zoom, (point.Y - VM.Offset.Y) / VM.Zoom);
@@ -312,9 +297,14 @@ namespace TutelMapper
             }
         }
 
+        private void GoBack(object sender, RoutedEventArgs e)
+        {
+            App.TryGoBack();
+        }
+
         [NotifyPropertyChangedInvocator]
         [UsedImplicitly]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

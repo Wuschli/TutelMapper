@@ -1,32 +1,55 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using SkiaSharp;
 using TutelMapper.Annotations;
+using Zio;
 
 namespace TutelMapper.ViewModels
 {
     public class TileInfo : INotifyPropertyChanged
     {
-        private SKImage _image;
+        private SKImage? _skiaImage;
+        private BitmapImage _imageSource;
         public event PropertyChangedEventHandler PropertyChanged;
         public string Name { get; set; }
-        public string ImagePath { get; set; }
+        public FileSystemItem ImageFile { get; set; }
 
-        public SKImage Image
+        public ImageSource ImageSource
         {
             get
             {
-                if (_image == null)
+                if (_imageSource == null)
                 {
-                    _image = SKImage.FromEncodedData(ImagePath);
+                    _imageSource = new BitmapImage();
+                    using var fileStream = ImageFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using var stream = fileStream.AsRandomAccessStream();
+                    stream.Seek(0);
+                    _ = _imageSource.SetSourceAsync(stream);
                 }
 
-                return _image;
+                return _imageSource;
+            }
+        }
+
+        public SKImage SkiaImage
+        {
+            get
+            {
+                if (_skiaImage == null)
+                {
+                    using var fileStream = ImageFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+                    _skiaImage = SKImage.FromEncodedData(fileStream);
+                }
+
+                return _skiaImage;
             }
         }
 
         public bool IsSelected { get; set; }
-        public float AspectRatio => Image.Height / (float)Image.Width;
+        public float AspectRatio => SkiaImage.Height / (float)SkiaImage.Width;
 
         [NotifyPropertyChangedInvocator]
         [UsedImplicitly]

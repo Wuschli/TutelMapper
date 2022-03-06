@@ -16,13 +16,18 @@
     <_Globbed_Compile Remove="Commands\PlaceTileCommand.cs" />
     <_Globbed_Compile Remove="Converters\Converters.xaml.cs" />
     <_Globbed_Compile Remove="Converters\HistoryIsAppliedConverter.cs" />
+    <_Globbed_Compile Remove="OverviewPage.xaml.cs" />
     <_Globbed_Compile Remove="Tools\BrushTool.cs" />
     <_Globbed_Compile Remove="Tools\ITool.cs" />
+    <_Globbed_Compile Remove="Util\FileSystem\SeamlessZipFileSystem.cs" />
+    <_Globbed_Compile Remove="Util\MapStorage.cs" />
+    <_Globbed_Compile Remove="Util\TileLibrary.cs" />
     <_Globbed_Compile Remove="Util\UndoStack.cs" />
     <_Globbed_Compile Remove="ViewModels\PointerInfo.cs" />
     <_Globbed_Compile Remove="ViewModels\SkPointPolicy.cs" />
   </ItemGroup>
   <ItemGroup>
+    <_Globbled_Page Remove="OverviewPage.xaml" />
     <_Globbled_Page Remove="Styles\Colors.xaml" />
   </ItemGroup>
 </Project>

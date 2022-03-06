@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -13,15 +12,14 @@ namespace TutelMapper.ViewModels
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public float Zoom { get; set; } = 1f;
         public SKPoint Offset { get; set; } = new SKPoint(96f, 160f);
-        public ObservableCollection<TileInfo> TileLibrary { get; } = new ObservableCollection<TileInfo>();
         public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
         public string[,] MapData { get; set; }
-        public TileInfo SelectedTile => TileLibrary.FirstOrDefault(info => info.IsSelected);
-        public ITool SelectedTool { get; set; }
+        public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
+        public ITool? SelectedTool { get; set; }
         public UndoStack UndoStack { get; } = new UndoStack();
 
         public async Task Undo()
@@ -37,7 +35,7 @@ namespace TutelMapper.ViewModels
         }
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

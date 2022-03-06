@@ -22,11 +22,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ICommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)EditorPage.xaml.cs">
+      <DependentUpon>EditorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)OverviewPage.xaml.cs">
+      <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Tools\BrushTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\ITool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\SeamlessZipFileSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\MapStorage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
@@ -38,7 +44,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)EditorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)OverviewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\Controls\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -57,6 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+    <None Include="$(MSBuildThisFileDirectory)Tiles\cuddlycloverFantasy.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />
@@ -74,47 +91,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Tiles\hex_trees.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile000.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile001.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile002.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile003.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile004.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile005.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile006.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile007.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile008.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile009.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile010.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile011.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile012.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile013.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile014.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile015.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile016.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile017.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile018.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile019.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile020.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile021.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile022.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile023.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile024.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile025.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile026.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile027.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile028.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile029.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile030.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile031.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile032.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile033.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile034.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile035.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile036.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile037.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile038.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile039.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Tiles\tile040.png" />
     <_Globbled_Page Include="$(MSBuildThisFileDirectory)**/*.xaml" Exclude="@(Page);@(ApplicationDefinition)">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,7 +99,6 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </_Globbed_Compile>
     <_Globbed_Compile Include="$(MSBuildThisFileDirectory)**/*.cs" Exclude="@(Compile);@(_Globbed_Compile)" />
-    <Compile Include="@(_Globbed_Compile)" />
     <_Globbed_PRIResource Include="$(MSBuildThisFileDirectory)**/*.resw" Exclude="@(PRIResource)" />
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
