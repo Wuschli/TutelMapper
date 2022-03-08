@@ -30,7 +30,11 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Tools\BrushTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\ITool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\BufferedZipFileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\SeamlessZipFileSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\UPathExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\StreamExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\ZipHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\MapStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
@@ -71,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\tiles.zip" />
     <None Include="$(MSBuildThisFileDirectory)Tiles\cuddlycloverFantasy.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -102,6 +107,5 @@
     <_Globbed_PRIResource Include="$(MSBuildThisFileDirectory)**/*.resw" Exclude="@(PRIResource)" />
     <PRIResource Include="@(_Globbed_PRIResource)" />
     <_Globbed_Content Include="$(MSBuildThisFileDirectory)Assets/**/*.*" Exclude="@(Content)" />
-    <Content Include="@(_Globbed_Content)" />
   </ItemGroup>
 </Project>

@@ -1,51 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
 using Zio;
 
 namespace TutelMapper.Util.FileSystem
 {
-    public static class ZipHelper
-    {
-        public static IEnumerable<FileSystemItem> EnumerateItems(IFileSystem fileSystem, FileSystemItem zipFile, UPath basePath)
-        {
-            using var stream = zipFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var zipStream = new ZipInputStream(stream);
-            ZipEntry entry;
-            while ((entry = zipStream.GetNextEntry()) != null)
-            {
-                yield return new FileSystemItem(fileSystem, basePath / entry.Name, entry.IsDirectory);
-            }
-        }
-
-        public static bool ZipSearchPredicate(ref FileSystemItem item)
-        {
-            return item.Path.GetExtensionWithDot()?.ToLowerInvariant() == ".zip";
-        }
-
-        public static Stream OpenEntry(FileSystemItem zipFile, string relativePathInsideZip)
-        {
-            using var stream = zipFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
-            using var zipStream = new ZipInputStream(stream);
-            ZipEntry entry;
-
-            while ((entry = zipStream.GetNextEntry()) != null)
-            {
-                if (entry.IsDirectory)
-                    continue;
-                if (entry.Name != relativePathInsideZip)
-                    continue;
-                var result = new MemoryStream(new byte[entry.Size]);
-                zipStream.CopyStream(result, (int)entry.Size);
-                result.Position = 0;
-                return result;
-            }
-
-            throw new FileNotFoundException();
-        }
-    }
-
     public class SeamlessZipFileSystem : Zio.FileSystems.FileSystem
     {
         private readonly IFileSystem _fileSystem;
@@ -206,32 +165,6 @@ namespace TutelMapper.Util.FileSystem
             }
 
             return null;
-        }
-    }
-
-    public static class UPathExtensions
-    {
-        public static UPath GetFullPathWithoutExtension(this UPath path)
-        {
-            var extension = path.GetExtensionWithDot();
-            if (string.IsNullOrEmpty(extension))
-                return path;
-            return path.FullName.Substring(0, path.FullName.Length - extension.Length);
-        }
-    }
-
-    public static class StreamExtensions
-    {
-        public static void CopyStream(this Stream input, Stream output, int bytes, int bufferSize = 32768)
-        {
-            byte[] buffer = new byte[bufferSize];
-            int read;
-            while (bytes > 0 && (read = input.Read(buffer, 0, Math.Min(buffer.Length, bytes))) > 0)
-            {
-                output.Write(buffer, 0, read);
-                bytes -= read;
-            }
-            output.Flush();
         }
     }
 }

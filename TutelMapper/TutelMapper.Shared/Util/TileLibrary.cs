@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
 using TutelMapper.Util.FileSystem;
 using TutelMapper.ViewModels;
 using Zio;
@@ -14,7 +17,7 @@ namespace TutelMapper.Util
         private readonly Dictionary<string, TileInfo> _tileCache = new Dictionary<string, TileInfo>();
 
         public ObservableCollection<TileInfo> Tiles { get; } = new ObservableCollection<TileInfo>();
-        public IFileSystem FileSystem { get; }
+        public IFileSystem FileSystem { get; private set; }
 
         public TileLibrary()
         {
@@ -28,10 +31,16 @@ namespace TutelMapper.Util
 #endif
         }
 
-        public void Load()
+        public async Task Load()
         {
             _tileCache.Clear();
             Tiles.Clear();
+
+            var tilesZip = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/tiles.zip"));
+            var tilesZipBuffer = await FileIO.ReadBufferAsync(tilesZip);
+
+            FileSystem = new BufferedZipFileSystem(tilesZipBuffer);
+
             foreach (var item in FileSystem.EnumerateItems(UPath.Root, SearchOption.AllDirectories).OrderBy(item => item.FullName))
             {
                 if (item.IsDirectory || item.Path.GetExtensionWithDot() != ".png")
@@ -44,8 +53,6 @@ namespace TutelMapper.Util
                     ImageFile = item
                 });
             }
-
-            // TODO handle non existent Tiles directory
         }
 
         public TileInfo? GetTile(string tileName)

@@ -42,7 +42,8 @@
                             IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
                             Style="{ThemeResource TileSelectRadioButtonStyle}"
                             Width="80px"
-                            Height="80px">
+                            Height="80px"
+                            GroupName="TileSelection">
                             <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
                         </RadioButton>
                     </DataTemplate>

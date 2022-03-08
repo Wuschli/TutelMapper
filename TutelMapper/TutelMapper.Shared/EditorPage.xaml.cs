@@ -52,7 +52,7 @@ namespace TutelMapper
         {
             base.OnNavigatedTo(e);
 
-            App.TileLibrary.Load();
+            _ = App.TileLibrary.Load();
 
             _pageIsActive = true;
             _ = DrawLoop();

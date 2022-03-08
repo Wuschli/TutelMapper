@@ -19,7 +19,11 @@
     <_Globbed_Compile Remove="OverviewPage.xaml.cs" />
     <_Globbed_Compile Remove="Tools\BrushTool.cs" />
     <_Globbed_Compile Remove="Tools\ITool.cs" />
+    <_Globbed_Compile Remove="Util\FileSystem\BufferedZipFileSystem.cs" />
     <_Globbed_Compile Remove="Util\FileSystem\SeamlessZipFileSystem.cs" />
+    <_Globbed_Compile Remove="Util\FileSystem\StreamExtensions.cs" />
+    <_Globbed_Compile Remove="Util\FileSystem\UPathExtensions.cs" />
+    <_Globbed_Compile Remove="Util\FileSystem\ZipHelper.cs" />
     <_Globbed_Compile Remove="Util\MapStorage.cs" />
     <_Globbed_Compile Remove="Util\TileLibrary.cs" />
     <_Globbed_Compile Remove="Util\UndoStack.cs" />
