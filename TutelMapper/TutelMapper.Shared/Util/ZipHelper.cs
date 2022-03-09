@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using Zio;
 
@@ -10,11 +11,12 @@ public static class ZipHelper
     public static IEnumerable<FileSystemItem> EnumerateItems(IFileSystem fileSystem, FileSystemItem zipFile, UPath basePath)
     {
         using var stream = zipFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
-        return EnumerateItems(fileSystem, stream, basePath);
+        return EnumerateItems(fileSystem, stream, basePath).ToList();
     }
 
     public static IEnumerable<FileSystemItem> EnumerateItems(IFileSystem fileSystem, Stream stream, UPath basePath)
     {
+        stream.Position = 0;
         using var zipStream = new ZipInputStream(stream);
         ZipEntry entry;
         while ((entry = zipStream.GetNextEntry()) != null)

@@ -52,7 +52,7 @@ namespace TutelMapper
         {
             base.OnNavigatedTo(e);
 
-            _ = App.TileLibrary.Load();
+            _ = Load();
 
             _pageIsActive = true;
             _ = DrawLoop();
@@ -62,6 +62,19 @@ namespace TutelMapper
         {
             base.OnNavigatedFrom(e);
             _pageIsActive = false;
+        }
+
+        private async Task Load()
+        {
+            try
+            {
+                await App.TileLibrary.Load();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private async Task DrawLoop()

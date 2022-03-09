@@ -17,17 +17,30 @@ namespace TutelMapper.Util
         private readonly Dictionary<string, TileInfo> _tileCache = new Dictionary<string, TileInfo>();
 
         public ObservableCollection<TileInfo> Tiles { get; } = new ObservableCollection<TileInfo>();
-        public IFileSystem FileSystem { get; private set; }
+        private IFileSystem? FileSystem { get; set; }
 
         public TileLibrary()
         {
+        }
+
+        private async Task InitializeFileSystem()
+        {
+            var tilesZip = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/tiles.zip"));
+            var tilesZipBuffer = await FileIO.ReadBufferAsync(tilesZip);
+
+            var defaultTilesFileSystem = new BufferedZipFileSystem(tilesZipBuffer);
+
 #if __WASM__
-            FileSystem = new MemoryFileSystem();
+            FileSystem = defaultTilesFileSystem;
 #else
             var physicalFileSystem = new PhysicalFileSystem();
             var tilesPath = physicalFileSystem.ConvertPathFromInternal(".") / "Tiles";
             var subFileSystem = new SubFileSystem(physicalFileSystem, tilesPath);
-            FileSystem = new SeamlessZipFileSystem(subFileSystem);
+            var seamlessZipFileSystem = new SeamlessZipFileSystem(subFileSystem);
+            var aggregateFileSystem = new AggregateFileSystem();
+            aggregateFileSystem.AddFileSystem(defaultTilesFileSystem);
+            aggregateFileSystem.AddFileSystem(seamlessZipFileSystem);
+            FileSystem = aggregateFileSystem;
 #endif
         }
 
@@ -36,10 +49,10 @@ namespace TutelMapper.Util
             _tileCache.Clear();
             Tiles.Clear();
 
-            var tilesZip = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/tiles.zip"));
-            var tilesZipBuffer = await FileIO.ReadBufferAsync(tilesZip);
+            await InitializeFileSystem();
 
-            FileSystem = new BufferedZipFileSystem(tilesZipBuffer);
+            if (FileSystem == null)
+                return;
 
             foreach (var item in FileSystem.EnumerateItems(UPath.Root, SearchOption.AllDirectories).OrderBy(item => item.FullName))
             {
