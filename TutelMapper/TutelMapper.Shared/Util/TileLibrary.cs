@@ -19,10 +19,6 @@ namespace TutelMapper.Util
         public ObservableCollection<TileInfo> Tiles { get; } = new ObservableCollection<TileInfo>();
         private IFileSystem? FileSystem { get; set; }
 
-        public TileLibrary()
-        {
-        }
-
         private async Task InitializeFileSystem()
         {
             var tilesZip = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/tiles.zip"));
