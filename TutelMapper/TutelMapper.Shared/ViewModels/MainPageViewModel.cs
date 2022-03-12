@@ -29,7 +29,8 @@ namespace TutelMapper.ViewModels
         public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
         public MapData MapData { get; private set; }
         public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
-        public ITool? SelectedTool { get; set; }
+        public ITool? SelectedTool => Tools.FirstOrDefault(tool => tool.IsSelected);
+        public List<ITool> Tools { get; } = new() { new BrushTool { IsSelected = true }, new EraserTool() };
         public UndoStack UndoStack { get; } = new();
 
         public void New()

@@ -33,10 +33,10 @@ namespace TutelMapper
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public MainPageViewModel VM { get; } = new MainPageViewModel();
+        public MainPageViewModel VM { get; } = new();
         public uint? DraggingPointer { get; private set; }
         public uint? PaintingPointer { get; private set; }
-        public ObservableCollection<PointerInfo> Pointers { get; } = new ObservableCollection<PointerInfo>();
+        public ObservableCollection<PointerInfo> Pointers { get; } = new();
         public TileLibrary TileLibrary => App.TileLibrary;
 
         public EditorPage()
@@ -44,7 +44,6 @@ namespace TutelMapper
             InitializeComponent();
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
             VM.New();
-            VM.SelectedTool = new BrushTool();
 
             VM.PropertyChanged += (_, _) => _somethingChanged = true;
             HistoryListView.SizeChanged += (_, _) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
@@ -172,16 +171,13 @@ namespace TutelMapper
         {
             var tileName = layer.Data[column, row];
             var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
-            var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
             var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
             var rect = new SKRect(pixelCoordinates.X - HexSize, pixelCoordinates.Y - HexSize, pixelCoordinates.X + HexSize, pixelCoordinates.Y + HexSize);
+            var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
 
-            if (isActiveLayer && hovered && VM.SelectedTile != null)
+            if (isActiveLayer && hovered && VM.SelectedTool != null)
             {
-                var fillRect = rect.AspectFill(new SKSize(HexSize, HexSize * VM.SelectedTile.AspectRatio));
-                var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + HexSize);
-                fillRect.Location -= new SKPoint(0, verticalOffset);
-                canvas.DrawImage(VM.SelectedTile.SkiaImage, fillRect);
+                VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, HexSize, VM.SelectedTile);
             }
             else if (!string.IsNullOrEmpty(tileName))
             {

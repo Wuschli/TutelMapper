@@ -8,6 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:TutelMapper.ViewModels"
     xmlns:data="using:TutelMapper.Data"
+    xmlns:tools="using:TutelMapper.Tools"
     xmlns:commands="using:TutelMapper.Commands"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -61,24 +62,44 @@
             </AppBarButton>
         </CommandBar>
 
-        <ScrollViewer controls:DockPanel.Dock="Left"
-                      Width="300px">
-            <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20">
+        <Grid controls:DockPanel.Dock="Left"
+              Width="300px">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20">
                 <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:TileInfo">
-                        <RadioButton
-                            ToolTipService.ToolTip="{x:Bind Name}"
-                            IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
-                            Style="{ThemeResource TileSelectRadioButtonStyle}"
-                            Width="80px"
-                            Height="80px"
-                            GroupName="TileSelection">
-                            <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
+                    <DataTemplate x:DataType="tools:ITool">
+                        <RadioButton IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                                     Style="{ThemeResource TileSelectRadioButtonStyle}"
+                                     Width="50px"
+                                     Height="50px"
+                                     Content="{x:Bind Name}"
+                                     VerticalAlignment="Center"
+                                     ToolTipService.ToolTip="{x:Bind Name}"
+                                     GroupName="ToolSelection">
                         </RadioButton>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-        </ScrollViewer>
+            <ScrollViewer Grid.Row="1">
+                <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:TileInfo">
+                            <RadioButton ToolTipService.ToolTip="{x:Bind Name}"
+                                         IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                                         Style="{ThemeResource TileSelectRadioButtonStyle}"
+                                         Width="80px"
+                                         Height="80px"
+                                         GroupName="TileSelection">
+                                <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
+                            </RadioButton>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </ScrollViewer>
+        </Grid>
         <Grid controls:DockPanel.Dock="Right"
               Width="300">
             <Grid.RowDefinitions>

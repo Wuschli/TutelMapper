@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\EraseTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ICommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
@@ -31,6 +32,7 @@
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Tools\BrushTool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\EraserTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\ITool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\BufferedZipFileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\SeamlessZipFileSystem.cs" />
