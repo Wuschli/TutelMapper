@@ -8,11 +8,14 @@ namespace TutelMapper.Data;
 [MessagePackObject]
 public class MapData : INotifyPropertyChanged
 {
+    private int _selectedLayerIndex;
+
     [UsedImplicitly]
     public event PropertyChangedEventHandler PropertyChanged;
 
     [IgnoreMember]
     public string? FilePath { get; set; }
+
     [IgnoreMember]
     public string? FaToken { get; set; }
 
@@ -29,7 +32,16 @@ public class MapData : INotifyPropertyChanged
     public ObservableCollection<MapLayer> Layers { get; set; } = new();
 
     [Key(4)]
-    public int SelectedLayerIndex { get; set; }
+    public int SelectedLayerIndex
+    {
+        get => _selectedLayerIndex;
+        set
+        {
+            if (value < 0 || value >= Layers.Count)
+                return;
+            _selectedLayerIndex = value;
+        }
+    }
 }
 
 [MessagePackObject]
