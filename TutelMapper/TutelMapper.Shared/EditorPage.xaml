@@ -8,6 +8,7 @@
     xmlns:skia="using:SkiaSharp.Views.UWP"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModels="using:TutelMapper.ViewModels"
+    xmlns:data="using:TutelMapper.Data"
     xmlns:commands="using:TutelMapper.Commands"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -56,15 +57,28 @@
                 <RowDefinition />
                 <RowDefinition Height="300" />
             </Grid.RowDefinitions>
-            <ScrollViewer>
-                <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:PointerInfo">
-                            <TextBlock Text="{x:Bind Position, Mode=OneWay}"></TextBlock>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
+            <StackPanel>
+                <ScrollViewer Height="300">
+                    <ListView ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
+                              SelectedIndex="{x:Bind VM.SelectedLayerIndex, Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="data:MapLayer">
+                                <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+                <Button Content="Add Layer" Click="{x:Bind VM.AddLayer}" />
+                <ScrollViewer>
+                    <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:PointerInfo">
+                                <TextBlock Text="{x:Bind Position, Mode=OneWay}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </StackPanel>
             <ScrollViewer Grid.Row="1" Name="HistoryScrollViewer" VerticalContentAlignment="Bottom"
                           VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible"
                           VerticalScrollMode="Enabled">

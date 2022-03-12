@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ICommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EditorPage.xaml.cs">
       <DependentUpon>EditorPage.xaml</DependentUpon>
     </Compile>

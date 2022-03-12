@@ -14,6 +14,7 @@ using Barbar.HexGrid;
 using SkiaSharp;
 using SkiaSharp.Views.UWP;
 using TutelMapper.Annotations;
+using TutelMapper.Data;
 using TutelMapper.Tools;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
@@ -41,7 +42,8 @@ namespace TutelMapper
         {
             InitializeComponent();
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
-            VM.MapData = new string[40, 40];
+            VM.MapData = new MapData { Width = 40, Height = 40 };
+            VM.MapData.AddLayer("Layer 1");
             VM.SelectedTool = new BrushTool();
 
             VM.PropertyChanged += (_, _) => _somethingChanged = true;
@@ -135,8 +137,8 @@ namespace TutelMapper
                 hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
             }
 
-            for (int column = 0; column < VM.MapData.GetLength(0); column++)
-            for (int row = 0; row < VM.MapData.GetLength(1); row++)
+            for (int column = 0; column < VM.MapData.Width; column++)
+            for (int row = 0; row < VM.MapData.Height; row++)
             {
                 var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
                 var vertices = VM.HexGrid.PolygonCorners(cubeCoordinates);
@@ -146,31 +148,35 @@ namespace TutelMapper
             }
 
             // draw map data
-            for (int row = 0; row < VM.MapData.GetLength(1); row++)
+            for (var layerIndex = 0; layerIndex < VM.MapData.Layers.Count; layerIndex++)
             {
-                //draw odd tiles in row
-                for (int column = 1; column < VM.MapData.GetLength(0); column += 2)
+                var layer = VM.MapData.Layers[layerIndex];
+                for (int row = 0; row < layer.Data.GetLength(1); row++)
                 {
-                    DrawTile(column, row, hoveredHex, canvas, paint);
-                }
+                    //draw odd tiles in row
+                    for (int column = 1; column < layer.Data.GetLength(0); column += 2)
+                    {
+                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.SelectedLayerIndex);
+                    }
 
-                //draw even tiles in row
-                for (int column = 0; column < VM.MapData.GetLength(0); column += 2)
-                {
-                    DrawTile(column, row, hoveredHex, canvas, paint);
+                    //draw even tiles in row
+                    for (int column = 0; column < layer.Data.GetLength(0); column += 2)
+                    {
+                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.SelectedLayerIndex);
+                    }
                 }
             }
         }
 
-        private void DrawTile(int column, int row, CubeCoordinates hoveredHex, SKCanvas canvas, SKPaint paint)
+        private void DrawTile(MapLayer layer, int column, int row, CubeCoordinates hoveredHex, SKCanvas canvas, SKPaint paint, bool isActiveLayer)
         {
-            var tileName = VM.MapData[column, row];
+            var tileName = layer.Data[column, row];
             var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
             var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
             var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
             var rect = new SKRect(pixelCoordinates.X - HexSize, pixelCoordinates.Y - HexSize, pixelCoordinates.X + HexSize, pixelCoordinates.Y + HexSize);
 
-            if (hovered && VM.SelectedTile != null)
+            if (isActiveLayer && hovered && VM.SelectedTile != null)
             {
                 var fillRect = rect.AspectFill(new SKSize(HexSize, HexSize * VM.SelectedTile.AspectRatio));
                 var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + HexSize);
@@ -303,9 +309,10 @@ namespace TutelMapper
             var adjustedCursorPosition = new SKPoint((point.X - VM.Offset.X) / VM.Zoom, (point.Y - VM.Offset.Y) / VM.Zoom);
             var cubeCoordinates = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
             var offsetCoordinates = VM.HexGrid.ToOffsetCoordinates(cubeCoordinates);
-            if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < VM.MapData.GetLength(0) && offsetCoordinates.Row < VM.MapData.GetLength(1))
+            var layer = VM.MapData.Layers[VM.SelectedLayerIndex];
+            if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < layer.Data.GetLength(0) && offsetCoordinates.Row < layer.Data.GetLength(1))
             {
-                VM.SelectedTool.Execute(VM.SelectedTile, VM.MapData, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
+                VM.SelectedTool.Execute(VM.SelectedTile, layer.Data, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
                     .ContinueWith(_ => _somethingChanged = true);
             }
         }
