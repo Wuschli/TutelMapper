@@ -2,7 +2,6 @@
     x:Class="TutelMapper.EditorPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:TutelMapper"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:skia="using:SkiaSharp.Views.UWP"
@@ -81,20 +80,46 @@
             </GridView>
         </ScrollViewer>
         <Grid controls:DockPanel.Dock="Right"
-              Width="200">
+              Width="300">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="300" />
             </Grid.RowDefinitions>
             <StackPanel>
                 <ScrollViewer Height="300">
-                    <ListView ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
-                              SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}">
+                    <ListView
+                        ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
+                        SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
-                                <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}"></TextBlock>
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{x:Bind DisplayName, Mode=TwoWay}" VerticalAlignment="Center" />
+                                    <Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;"
+                                            ToolTipService.ToolTip="Move Up"
+                                            Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            Click="MoveLayerUp" />
+                                    <Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;"
+                                            ToolTipService.ToolTip="Move Down"
+                                            Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            Click="MoveLayerDown" />
+                                    <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE711;"
+                                            ToolTipService.ToolTip="Delete"
+                                            Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            Click="DeleteLayer" />
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
                 </ScrollViewer>
                 <Button Content="Add Layer" Click="{x:Bind VM.AddLayer}" />

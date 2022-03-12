@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Graphics.Display;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -53,7 +54,7 @@ namespace TutelMapper
         {
             base.OnNavigatedTo(e);
 
-            _ = Load();
+            _ = LoadTiles();
 
             _pageIsActive = true;
             _ = DrawLoop();
@@ -65,7 +66,7 @@ namespace TutelMapper
             _pageIsActive = false;
         }
 
-        private async Task Load()
+        private async Task LoadTiles()
         {
             try
             {
@@ -73,8 +74,8 @@ namespace TutelMapper
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                var dialog = new MessageDialog(e.Message, "Failed to load");
+                await dialog.ShowAsync();
             }
         }
 
@@ -147,7 +148,7 @@ namespace TutelMapper
             }
 
             // draw map data
-            for (var layerIndex = 0; layerIndex < VM.MapData.Layers.Count; layerIndex++)
+            for (var layerIndex = VM.MapData.Layers.Count - 1; layerIndex >= 0; layerIndex--)
             {
                 var layer = VM.MapData.Layers[layerIndex];
                 for (int row = 0; row < layer.Data.GetLength(1); row++)
@@ -319,6 +320,33 @@ namespace TutelMapper
         private void GoBack(object sender, RoutedEventArgs e)
         {
             App.TryGoBack();
+        }
+
+        private void MoveLayerUp(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is MapLayer layer)
+            {
+                VM.MapData.MoveLayerUp(layer);
+                _somethingChanged = true;
+            }
+        }
+
+        private void MoveLayerDown(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is MapLayer layer)
+            {
+                VM.MapData.MoveLayerDown(layer);
+                _somethingChanged = true;
+            }
+        }
+
+        private void DeleteLayer(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is MapLayer layer)
+            {
+                VM.MapData.DeleteLayer(layer);
+                _somethingChanged = true;
+            }
         }
 
         [NotifyPropertyChangedInvocator]

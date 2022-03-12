@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Input;
 using Barbar.HexGrid;
 using MessagePack;
 using SkiaSharp;
@@ -25,10 +27,10 @@ namespace TutelMapper.ViewModels
         public float Zoom { get; set; } = 1f;
         public SKPoint Offset { get; set; }
         public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
-        public MapData MapData { get; set; }
+        public MapData MapData { get; private set; }
         public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
         public ITool? SelectedTool { get; set; }
-        public UndoStack UndoStack { get; } = new UndoStack();
+        public UndoStack UndoStack { get; } = new();
 
         public void New()
         {

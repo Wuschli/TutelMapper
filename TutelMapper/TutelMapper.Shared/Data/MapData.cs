@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
+using Windows.UI.Xaml.Input;
 using MessagePack;
 using TutelMapper.Annotations;
 
