@@ -51,7 +51,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public async Task Open()
+    public async Task OpenMap()
     {
         try
         {

@@ -122,79 +122,87 @@ namespace TutelMapper
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            // the canvas and properties
-            var canvas = e.Surface.Canvas;
-
-            // get the screen density for scaling
-            var display = DisplayInformation.GetForCurrentView();
-            var scale = display.LogicalDpi / 96.0f;
-
-            // handle the device screen density
-            canvas.Scale(scale);
-
-            // make sure the canvas is blank
-            canvas.Clear(SKColors.Gray);
-
-            if (VM.MapData == null)
-                return;
-
-            // draw some text
-            var paint = new SKPaint
+            try
             {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                TextAlign = SKTextAlign.Center,
-                TextSize = 12
-            };
+                // the canvas and properties
+                var canvas = e.Surface.Canvas;
 
-            var gridPaint = new SKPaint
-            {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Stroke
-            };
+                // get the screen density for scaling
+                var display = DisplayInformation.GetForCurrentView();
+                var scale = display.LogicalDpi / 96.0f;
 
-            canvas.Translate(VM.Offset);
-            canvas.Scale(VM.Zoom);
+                // handle the device screen density
+                canvas.Scale(scale);
 
-            // draw hex grid
-            var pointerInfo = Pointers.FirstOrDefault();
-            var hoveredHex = new CubeCoordinates(-1, -1, -1);
-            if (pointerInfo != null && pointerInfo.Type != PointerDeviceType.Touch)
-            {
-                var adjustedCursorPosition = new SKPoint((pointerInfo.Position.X - VM.Offset.X) / VM.Zoom, (pointerInfo.Position.Y - VM.Offset.Y) / VM.Zoom);
-                hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
-            }
+                // make sure the canvas is blank
+                canvas.Clear(SKColors.Gray);
 
-            for (int column = 0; column < VM.MapData.Width; column++)
-            for (int row = 0; row < VM.MapData.Height; row++)
-            {
-                var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
-                var vertices = VM.HexGrid.PolygonCorners(cubeCoordinates);
-                var path = new SKPath();
-                path.AddPoly(vertices.ToArray());
-                canvas.DrawPath(path, gridPaint);
-            }
+                if (VM.MapData == null)
+                    return;
 
-            // draw map data
-            for (var layerIndex = VM.MapData.Layers.Count - 1; layerIndex >= 0; layerIndex--)
-            {
-                var layer = VM.MapData.Layers[layerIndex];
-                for (int row = 0; row < layer.Data.GetLength(1); row++)
+                // draw some text
+                var paint = new SKPaint
                 {
-                    //draw odd tiles in row
-                    for (int column = 1; column < layer.Data.GetLength(0); column += 2)
-                    {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
-                    }
+                    Color = SKColors.Black,
+                    IsAntialias = true,
+                    Style = SKPaintStyle.Fill,
+                    TextAlign = SKTextAlign.Center,
+                    TextSize = 12
+                };
 
-                    //draw even tiles in row
-                    for (int column = 0; column < layer.Data.GetLength(0); column += 2)
+                var gridPaint = new SKPaint
+                {
+                    Color = SKColors.Black,
+                    IsAntialias = true,
+                    Style = SKPaintStyle.Stroke
+                };
+
+                canvas.Translate(VM.Offset);
+                canvas.Scale(VM.Zoom);
+
+                // draw hex grid
+                var pointerInfo = Pointers.FirstOrDefault();
+                var hoveredHex = new CubeCoordinates(-1, -1, -1);
+                if (pointerInfo != null && pointerInfo.Type != PointerDeviceType.Touch)
+                {
+                    var adjustedCursorPosition = new SKPoint((pointerInfo.Position.X - VM.Offset.X) / VM.Zoom, (pointerInfo.Position.Y - VM.Offset.Y) / VM.Zoom);
+                    hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
+                }
+
+                for (int column = 0; column < VM.MapData.Width; column++)
+                for (int row = 0; row < VM.MapData.Height; row++)
+                {
+                    var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
+                    var vertices = VM.HexGrid.PolygonCorners(cubeCoordinates);
+                    var path = new SKPath();
+                    path.AddPoly(vertices.ToArray());
+                    canvas.DrawPath(path, gridPaint);
+                }
+
+                // draw map data
+                for (var layerIndex = VM.MapData.Layers.Count - 1; layerIndex >= 0; layerIndex--)
+                {
+                    var layer = VM.MapData.Layers[layerIndex];
+                    for (int row = 0; row < layer.Data.GetLength(1); row++)
                     {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
+                        //draw odd tiles in row
+                        for (int column = 1; column < layer.Data.GetLength(0); column += 2)
+                        {
+                            DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
+                        }
+
+                        //draw even tiles in row
+                        for (int column = 0; column < layer.Data.GetLength(0); column += 2)
+                        {
+                            DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog(ex.Message, "Something went wrong :(");
+                _ = dialog.ShowAsync();
             }
         }
 

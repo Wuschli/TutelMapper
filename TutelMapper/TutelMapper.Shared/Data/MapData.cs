@@ -46,10 +46,10 @@ public class MapData : INotifyPropertyChanged
     }
 
     [Key(5)]
-    public HexType HexType { get; set; }
+    public HexType HexType { get; set; } = HexType.Flat;
 
     [Key(6)]
-    public int HexSize { get; set; }
+    public int HexSize { get; set; } = 64;
 }
 
 [MessagePackObject]

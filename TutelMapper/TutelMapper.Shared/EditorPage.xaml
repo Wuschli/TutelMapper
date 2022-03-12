@@ -33,7 +33,7 @@
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
             <AppBarButton Icon="OpenFile"
-                          Click="{x:Bind VM.Open}"
+                          Click="{x:Bind VM.OpenMap}"
                           ToolTipService.ToolTip="Open (Ctrl+O)">
                 <AppBarButton.KeyboardAccelerators>
                     <KeyboardAccelerator Modifiers="Control" Key="O" />
