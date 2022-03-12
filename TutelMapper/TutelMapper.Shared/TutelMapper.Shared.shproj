@@ -14,10 +14,13 @@
     <_Globbed_Compile Remove="Commands\EraseTileCommand.cs" />
     <_Globbed_Compile Remove="Data\MapData.cs" />
     <_Globbed_Compile Remove="Data\MapDataExtensions.cs" />
+    <_Globbed_Compile Remove="Dialogs\NewMapDialog.xaml.cs" />
     <_Globbed_Compile Remove="Tools\EraserTool.cs" />
     <_Globbed_Compile Remove="Tools\PointerTool.cs" />
+    <_Globbed_Compile Remove="ViewModels\HexType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <_Globbled_Page Remove="Dialogs\NewMapDialog.xaml" />
     <_Globbled_Page Remove="Templates\Notification.xaml" />
     <_Globbled_Page Remove="Templates\_Templates.xaml" />
   </ItemGroup>

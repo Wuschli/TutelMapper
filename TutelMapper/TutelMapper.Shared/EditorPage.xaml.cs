@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Graphics.Display;
-using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -18,7 +17,7 @@ using SkiaSharp;
 using SkiaSharp.Views.UWP;
 using TutelMapper.Annotations;
 using TutelMapper.Data;
-using TutelMapper.Tools;
+using TutelMapper.Dialogs;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
@@ -31,8 +30,6 @@ namespace TutelMapper
         private bool _pageIsActive;
         private bool _somethingChanged;
 
-        private const float HexSize = 64f;
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainPageViewModel VM { get; } = new();
@@ -44,8 +41,7 @@ namespace TutelMapper
         public EditorPage()
         {
             InitializeComponent();
-            VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
-            VM.New();
+            VM.NewMap(40, 40, HexType.Flat, 64);
 
             VM.PropertyChanged += (_, _) => _somethingChanged = true;
             HistoryListView.SizeChanged += (_, _) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
@@ -203,26 +199,26 @@ namespace TutelMapper
             var tileName = layer.Data[column, row];
             var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
             var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
-            var rect = new SKRect(pixelCoordinates.X - HexSize, pixelCoordinates.Y - HexSize, pixelCoordinates.X + HexSize, pixelCoordinates.Y + HexSize);
+            var rect = new SKRect(pixelCoordinates.X - VM.MapData.HexSize, pixelCoordinates.Y - VM.MapData.HexSize, pixelCoordinates.X + VM.MapData.HexSize, pixelCoordinates.Y + VM.MapData.HexSize);
             var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
 
             if (isActiveLayer && hovered && VM.SelectedTool != null && VM.SelectedTool.CanPreview(VM.SelectedTile))
             {
-                VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, HexSize, VM.SelectedTile);
+                VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, VM.MapData.HexSize, VM.SelectedTile);
             }
             else if (!string.IsNullOrEmpty(tileName))
             {
                 var tileInfo = App.TileLibrary.GetTile(tileName);
                 if (tileInfo != null)
                 {
-                    var fillRect = rect.AspectFill(new SKSize(HexSize, HexSize * tileInfo.AspectRatio));
-                    var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + HexSize);
+                    var fillRect = rect.AspectFill(new SKSize(VM.MapData.HexSize, VM.MapData.HexSize * tileInfo.AspectRatio));
+                    var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + VM.MapData.HexSize);
                     fillRect.Location -= new SKPoint(0, verticalOffset);
                     canvas.DrawImage(tileInfo.SkiaImage, fillRect);
                 }
                 else
                 {
-                    canvas.DrawText($"Tile not found!\n{tileName}", pixelCoordinates - new SKPoint(HexSize / 2, HexSize / 2), paint);
+                    canvas.DrawText($"Tile not found!\n{tileName}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2, VM.MapData.HexSize / 2), paint);
                 }
             }
         }
@@ -381,6 +377,12 @@ namespace TutelMapper
         private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task NewMap()
+        {
+            var dialog = new NewMapDialog(VM);
+            await dialog.ShowAsync();
         }
     }
 }

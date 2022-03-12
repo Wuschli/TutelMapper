@@ -25,6 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapDataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Dialogs\NewMapDialog.xaml.cs">
+      <DependentUpon>NewMapDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)EditorPage.xaml.cs">
       <DependentUpon>EditorPage.xaml</DependentUpon>
     </Compile>
@@ -43,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\MapStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HexType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PointerInfo.cs" />
@@ -50,6 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Converters\_Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Dialogs\NewMapDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

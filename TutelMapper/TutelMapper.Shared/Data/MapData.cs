@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml.Input;
 using MessagePack;
 using TutelMapper.Annotations;
+using TutelMapper.ViewModels;
 
 namespace TutelMapper.Data;
 
@@ -44,6 +45,12 @@ public class MapData : INotifyPropertyChanged
             _selectedLayerIndex = value;
         }
     }
+
+    [Key(5)]
+    public HexType HexType { get; set; }
+
+    [Key(6)]
+    public int HexSize { get; set; }
 }
 
 [MessagePackObject]
