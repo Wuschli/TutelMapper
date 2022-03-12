@@ -175,7 +175,7 @@ namespace TutelMapper
             var rect = new SKRect(pixelCoordinates.X - HexSize, pixelCoordinates.Y - HexSize, pixelCoordinates.X + HexSize, pixelCoordinates.Y + HexSize);
             var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
 
-            if (isActiveLayer && hovered && VM.SelectedTool != null)
+            if (isActiveLayer && hovered && VM.SelectedTool != null && VM.SelectedTool.CanPreview(VM.SelectedTile))
             {
                 VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, HexSize, VM.SelectedTile);
             }

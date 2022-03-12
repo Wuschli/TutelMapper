@@ -30,7 +30,7 @@ namespace TutelMapper.ViewModels
         public MapData MapData { get; private set; }
         public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
         public ITool? SelectedTool => Tools.FirstOrDefault(tool => tool.IsSelected);
-        public List<ITool> Tools { get; } = new() { new BrushTool { IsSelected = true }, new EraserTool() };
+        public List<ITool> Tools { get; } = new() { new PointerTool { IsSelected = true }, new BrushTool(), new EraserTool() };
         public UndoStack UndoStack { get; } = new();
 
         public void New()

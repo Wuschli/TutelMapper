@@ -68,23 +68,24 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20">
+            <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20 0" Padding="0">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="tools:ITool">
                         <RadioButton IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
                                      Style="{ThemeResource TileSelectRadioButtonStyle}"
                                      Width="50px"
                                      Height="50px"
-                                     Content="{x:Bind Name}"
-                                     VerticalAlignment="Center"
+                                     FontSize="36"
+                                     FontFamily="Segoe MDL2 Assets"
+                                     Content="{x:Bind Icon}"
+                                     VerticalAlignment="Stretch"
                                      ToolTipService.ToolTip="{x:Bind Name}"
-                                     GroupName="ToolSelection">
-                        </RadioButton>
+                                     GroupName="ToolSelection"/>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <ScrollViewer Grid.Row="1">
-                <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20">
+            <ScrollViewer Grid.Row="1" Margin="0 20">
+                <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20 0" Padding="0">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:TileInfo">
                             <RadioButton ToolTipService.ToolTip="{x:Bind Name}"

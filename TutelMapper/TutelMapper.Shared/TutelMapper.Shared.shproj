@@ -15,6 +15,7 @@
     <_Globbed_Compile Remove="Data\MapData.cs" />
     <_Globbed_Compile Remove="Data\MapDataExtensions.cs" />
     <_Globbed_Compile Remove="Tools\EraserTool.cs" />
+    <_Globbed_Compile Remove="Tools\PointerTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <_Globbled_Page Remove="Templates\Notification.xaml" />

@@ -12,6 +12,7 @@ public class BrushTool : ITool
 {
     public bool CanUseOnDrag => true;
     public string Name => "Brush";
+    public string Icon => "\uED63";
     public bool IsSelected { get; set; }
 
     public async Task Execute(TileInfo selectedTile, string[,] target, int x, int y, UndoStack undoStack)
@@ -19,6 +20,11 @@ public class BrushTool : ITool
         if (target[x, y] == selectedTile.Name)
             return;
         await undoStack.Do(new PlaceTileCommand(target, x, y, selectedTile));
+    }
+
+    public bool CanPreview(TileInfo? selectedTile)
+    {
+        return selectedTile != null;
     }
 
     public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, TileInfo? selectedTile)
