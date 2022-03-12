@@ -12,7 +12,7 @@ namespace TutelMapper.Util
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int StackPointer { get; private set; } = -1;
-        public ObservableCollection<ICommand> Stack { get; } = new ObservableCollection<ICommand>();
+        public ObservableCollection<ICommand> Stack { get; } = new();
 
         public async Task Do(ICommand command)
         {
@@ -48,6 +48,12 @@ namespace TutelMapper.Util
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Clear()
+        {
+            StackPointer = -1;
+            Stack.Clear();
         }
     }
 }

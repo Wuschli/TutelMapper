@@ -42,8 +42,7 @@ namespace TutelMapper
         {
             InitializeComponent();
             VM.HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(HexSize, HexSize), new SKPoint(0, 0), Offset.Even);
-            VM.MapData = new MapData { Width = 40, Height = 40 };
-            VM.MapData.AddLayer("Layer 1");
+            VM.New();
             VM.SelectedTool = new BrushTool();
 
             VM.PropertyChanged += (_, _) => _somethingChanged = true;
@@ -156,13 +155,13 @@ namespace TutelMapper
                     //draw odd tiles in row
                     for (int column = 1; column < layer.Data.GetLength(0); column += 2)
                     {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.SelectedLayerIndex);
+                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
                     }
 
                     //draw even tiles in row
                     for (int column = 0; column < layer.Data.GetLength(0); column += 2)
                     {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.SelectedLayerIndex);
+                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
                     }
                 }
             }
@@ -309,7 +308,7 @@ namespace TutelMapper
             var adjustedCursorPosition = new SKPoint((point.X - VM.Offset.X) / VM.Zoom, (point.Y - VM.Offset.Y) / VM.Zoom);
             var cubeCoordinates = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
             var offsetCoordinates = VM.HexGrid.ToOffsetCoordinates(cubeCoordinates);
-            var layer = VM.MapData.Layers[VM.SelectedLayerIndex];
+            var layer = VM.MapData.Layers[VM.MapData.SelectedLayerIndex];
             if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < layer.Data.GetLength(0) && offsetCoordinates.Row < layer.Data.GetLength(1))
             {
                 VM.SelectedTool.Execute(VM.SelectedTile, layer.Data, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)

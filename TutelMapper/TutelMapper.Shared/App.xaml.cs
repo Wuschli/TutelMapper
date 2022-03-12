@@ -30,7 +30,7 @@ public sealed partial class App : Application
         this.InitializeComponent();
 
 #if HAS_UNO || NETFX_CORE
-            this.Suspending += OnSuspending;
+        this.Suspending += OnSuspending;
 #endif
     }
 
@@ -52,7 +52,7 @@ public sealed partial class App : Application
         _window = new Window();
         _window.Activate();
 #else
-            _window = Windows.UI.Xaml.Window.Current;
+        _window = Windows.UI.Xaml.Window.Current;
 #endif
 
         var rootFrame = _window.Content as Frame;
@@ -76,7 +76,7 @@ public sealed partial class App : Application
         }
 
 #if !(NET6_0_OR_GREATER && WINDOWS)
-            if (args.PrelaunchActivated == false)
+        if (args.PrelaunchActivated == false)
 #endif
         {
             if (rootFrame.Content == null)
@@ -84,7 +84,7 @@ public sealed partial class App : Application
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(OverviewPage), args.Arguments);
+                rootFrame.Navigate(typeof(EditorPage), args.Arguments);
             }
 
             // Ensure the current window is active
@@ -128,7 +128,7 @@ public sealed partial class App : Application
 #elif __IOS__
                 builder.AddProvider(new global::Uno.Extensions.Logging.OSLogLoggerProvider());
 #elif NETFX_CORE
-                builder.AddDebug();
+            builder.AddDebug();
 #else
             builder.AddConsole();
 #endif

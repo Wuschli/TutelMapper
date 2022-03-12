@@ -25,6 +25,15 @@
                               Height="48px" />
             </CommandBar.Content>
 
+            <AppBarButton Icon="Page2"
+                          Click="{x:Bind VM.New}"
+                          ToolTipService.ToolTip="New" />
+            <AppBarButton Icon="OpenFile"
+                          Click="{x:Bind VM.Load}"
+                          ToolTipService.ToolTip="Load" />
+            <AppBarButton Icon="Save"
+                          Click="{x:Bind VM.Save}"
+                          ToolTipService.ToolTip="Save" />
             <AppBarButton Icon="Undo"
                           Click="{x:Bind VM.Undo}"
                           ToolTipService.ToolTip="Undo" />
@@ -60,7 +69,7 @@
             <StackPanel>
                 <ScrollViewer Height="300">
                     <ListView ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
-                              SelectedIndex="{x:Bind VM.SelectedLayerIndex, Mode=TwoWay}">
+                              SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
                                 <TextBlock Text="{x:Bind DisplayName, Mode=OneWay}"></TextBlock>

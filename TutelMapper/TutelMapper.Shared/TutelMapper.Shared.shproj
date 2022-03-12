@@ -12,5 +12,10 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
   <ItemGroup>
     <_Globbed_Compile Remove="Data\MapData.cs" />
+    <_Globbed_Compile Remove="Data\MapDataExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <_Globbled_Page Remove="Templates\Notification.xaml" />
+    <_Globbled_Page Remove="Templates\_Templates.xaml" />
   </ItemGroup>
 </Project>

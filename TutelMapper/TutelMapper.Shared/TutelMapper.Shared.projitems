@@ -23,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Commands\PlaceTileCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MapDataExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EditorPage.xaml.cs">
       <DependentUpon>EditorPage.xaml</DependentUpon>
     </Compile>
@@ -70,6 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Styles\_Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Templates\_Templates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

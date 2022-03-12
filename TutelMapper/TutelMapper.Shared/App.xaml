@@ -11,6 +11,7 @@
 
                 <ResourceDictionary Source="Styles/_Styles.xaml" />
                 <ResourceDictionary Source="Converters/_Converters.xaml" />
+                <ResourceDictionary Source="Templates/_Templates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
