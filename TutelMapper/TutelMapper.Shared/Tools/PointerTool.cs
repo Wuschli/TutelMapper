@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+using System.Threading.Tasks;
 using Barbar.HexGrid;
 using SkiaSharp;
 using TutelMapper.Data;
@@ -14,7 +15,7 @@ public class PointerTool : ITool
     public string Icon => "\uF271";
     public bool IsSelected { get; set; }
 
-    public Task Execute(TileInfo selectedTile, string[,] target, int x, int y, UndoStack undoStack)
+    public Task Execute(TileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
     {
         return Task.CompletedTask;
     }

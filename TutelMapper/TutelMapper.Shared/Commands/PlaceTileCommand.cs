@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -9,16 +10,16 @@ namespace TutelMapper.Commands;
 
 public class PlaceTileCommand : ICommand
 {
-    private readonly string[,] _target;
+    private readonly string?[,] _target;
     private readonly int _x;
     private readonly int _y;
     private readonly TileInfo _tileInfo;
 
-    private string _previousTile;
+    private string? _previousTile;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public PlaceTileCommand(string[,] target, int x, int y, TileInfo tileInfo)
+    public PlaceTileCommand(string?[,] target, int x, int y, TileInfo tileInfo)
     {
         _target = target ?? throw new ArgumentNullException(nameof(target));
         _tileInfo = tileInfo ?? throw new ArgumentNullException(nameof(tileInfo));
@@ -54,7 +55,7 @@ public class PlaceTileCommand : ICommand
 
     [NotifyPropertyChangedInvocator]
     [UsedImplicitly]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

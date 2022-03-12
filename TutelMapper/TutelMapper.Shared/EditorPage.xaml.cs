@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace TutelMapper
             SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += CloseRequested;
         }
 
-        private async void CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        private async void CloseRequested(object? sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             if (!VM.UndoStack.HasUnsavedChanges)
                 return;
@@ -134,6 +135,9 @@ namespace TutelMapper
             // make sure the canvas is blank
             canvas.Clear(SKColors.Gray);
 
+            if (VM.MapData == null)
+                return;
+
             // draw some text
             var paint = new SKPaint
             {
@@ -196,6 +200,9 @@ namespace TutelMapper
 
         private void DrawTile(MapLayer layer, int column, int row, CubeCoordinates hoveredHex, SKCanvas canvas, SKPaint paint, bool isActiveLayer)
         {
+            if (VM.MapData == null)
+                return;
+
             var tileName = layer.Data[column, row];
             var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
             var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
@@ -218,7 +225,7 @@ namespace TutelMapper
                 }
                 else
                 {
-                    canvas.DrawText($"Tile not found!\n{tileName}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2, VM.MapData.HexSize / 2), paint);
+                    canvas.DrawText($"Tile not found!\n{tileName}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2f, VM.MapData.HexSize / 2f), paint);
                 }
             }
         }
@@ -327,6 +334,8 @@ namespace TutelMapper
                 return;
             if (VM.SelectedTool == null)
                 return;
+            if (VM.MapData == null)
+                return;
             if (!VM.SelectedTool.CanUseOnDrag && isDrag)
                 return;
             var adjustedCursorPosition = new SKPoint((point.X - VM.Offset.X) / VM.Zoom, (point.Y - VM.Offset.Y) / VM.Zoom);
@@ -340,7 +349,7 @@ namespace TutelMapper
             }
         }
 
-        private void GoBack(object sender, RoutedEventArgs e)
+        private void GoBack()
         {
             App.TryGoBack();
         }
@@ -349,7 +358,7 @@ namespace TutelMapper
         {
             if (sender is Button button && button.DataContext is MapLayer layer)
             {
-                VM.MapData.MoveLayerUp(layer);
+                VM.MapData?.MoveLayerUp(layer);
                 _somethingChanged = true;
             }
         }
@@ -358,7 +367,7 @@ namespace TutelMapper
         {
             if (sender is Button button && button.DataContext is MapLayer layer)
             {
-                VM.MapData.MoveLayerDown(layer);
+                VM.MapData?.MoveLayerDown(layer);
                 _somethingChanged = true;
             }
         }
@@ -367,7 +376,7 @@ namespace TutelMapper
         {
             if (sender is Button button && button.DataContext is MapLayer layer)
             {
-                VM.MapData.DeleteLayer(layer);
+                VM.MapData?.DeleteLayer(layer);
                 _somethingChanged = true;
             }
         }

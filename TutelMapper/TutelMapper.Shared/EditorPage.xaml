@@ -10,7 +10,6 @@
     xmlns:data="using:TutelMapper.Data"
     xmlns:tools="using:TutelMapper.Tools"
     xmlns:commands="using:TutelMapper.Commands"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 

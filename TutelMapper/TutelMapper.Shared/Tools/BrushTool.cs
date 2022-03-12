@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#nullable enable
+using System.Threading.Tasks;
 using Barbar.HexGrid;
 using SkiaSharp;
 using TutelMapper.Commands;
@@ -15,7 +16,7 @@ public class BrushTool : ITool
     public string Icon => "\uED63";
     public bool IsSelected { get; set; }
 
-    public async Task Execute(TileInfo selectedTile, string[,] target, int x, int y, UndoStack undoStack)
+    public async Task Execute(TileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
     {
         if (target[x, y] == selectedTile.Name)
             return;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -25,7 +26,7 @@ public class MainPageViewModel : INotifyPropertyChanged
     public float Zoom { get; set; } = 1f;
     public SKPoint Offset { get; set; }
     public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
-    public MapData MapData { get; private set; }
+    public MapData? MapData { get; private set; }
     public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
     public ITool? SelectedTool => Tools.FirstOrDefault(tool => tool.IsSelected);
     public List<ITool> Tools { get; } = new() { new PointerTool { IsSelected = true }, new BrushTool(), new EraserTool() };
@@ -85,6 +86,8 @@ public class MainPageViewModel : INotifyPropertyChanged
 
     public async Task Save()
     {
+        if (MapData == null)
+            return;
         try
         {
             if (string.IsNullOrEmpty(MapData.FilePath) && string.IsNullOrEmpty(MapData.FaToken))
@@ -95,9 +98,9 @@ public class MainPageViewModel : INotifyPropertyChanged
 
             StorageFile? file = null;
             if (!string.IsNullOrEmpty(MapData.FaToken))
-                file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(MapData.FaToken);
-            else
-                file = await StorageFile.GetFileFromPathAsync(MapData.FilePath);
+                file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(MapData.FaToken!);
+            else if (!string.IsNullOrEmpty(MapData.FilePath))
+                file = await StorageFile.GetFileFromPathAsync(MapData.FilePath!);
 
             if (file == null)
                 throw new FileNotFoundException();
@@ -115,6 +118,9 @@ public class MainPageViewModel : INotifyPropertyChanged
 
     public async Task SaveAs()
     {
+        if (MapData == null)
+            return;
+
         var savePicker = new Windows.Storage.Pickers.FileSavePicker
         {
             SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary

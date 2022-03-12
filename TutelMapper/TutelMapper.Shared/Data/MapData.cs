@@ -1,7 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿#nullable enable
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Input;
-using Windows.UI.Xaml.Input;
 using MessagePack;
 using TutelMapper.Annotations;
 using TutelMapper.ViewModels;
@@ -14,7 +13,7 @@ public class MapData : INotifyPropertyChanged
     private int _selectedLayerIndex;
 
     [UsedImplicitly]
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     [IgnoreMember]
     public string? FilePath { get; set; }
@@ -57,14 +56,14 @@ public class MapData : INotifyPropertyChanged
 public class MapLayer : INotifyPropertyChanged
 {
     [UsedImplicitly]
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     [Key(0)]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     [Key(1)]
     public bool IsVisible { get; set; }
 
     [Key(2)]
-    public string[,] Data { get; set; }
+    public string?[,] Data { get; set; } = new string?[0, 0];
 }

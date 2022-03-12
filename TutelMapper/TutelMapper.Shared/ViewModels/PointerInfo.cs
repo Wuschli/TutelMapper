@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Devices.Input;
 using SkiaSharp;
@@ -8,7 +9,7 @@ namespace TutelMapper.ViewModels
 {
     public class PointerInfo : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public uint PointerId { get; }
         public PointerDeviceType Type { get; }
         public SKPoint Position { get; set; }
@@ -26,7 +27,7 @@ namespace TutelMapper.ViewModels
 
         [NotifyPropertyChangedInvocator]
         [UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

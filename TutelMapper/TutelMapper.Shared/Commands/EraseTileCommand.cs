@@ -8,15 +8,15 @@ namespace TutelMapper.Commands;
 
 public class EraseTileCommand : ICommand
 {
-    private readonly string[,] _target;
+    private readonly string?[,] _target;
     private readonly int _x;
     private readonly int _y;
 
-    private string _previousTile;
+    private string? _previousTile;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public EraseTileCommand(string[,] target, int x, int y)
+    public EraseTileCommand(string?[,] target, int x, int y)
     {
         _target = target ?? throw new ArgumentNullException(nameof(target));
         _x = x;
@@ -51,7 +51,7 @@ public class EraseTileCommand : ICommand
 
     [NotifyPropertyChangedInvocator]
     [UsedImplicitly]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

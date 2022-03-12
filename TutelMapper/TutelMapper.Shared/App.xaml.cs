@@ -1,11 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#nullable enable
 using System;
+using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Extensions.Logging;
 using TutelMapper.Util;
+using Uno.Extensions;
 
 namespace TutelMapper;
 
@@ -14,9 +17,8 @@ namespace TutelMapper;
 /// </summary>
 public sealed partial class App : Application
 {
-    private Window _window;
+    private Window? _window;
 
-    public static MapStorage MapStorage { get; } = new MapStorage();
     public static TileLibrary TileLibrary { get; } = new TileLibrary();
 
     /// <summary>
@@ -27,10 +29,10 @@ public sealed partial class App : Application
     {
         InitializeLogging();
 
-        this.InitializeComponent();
+        InitializeComponent();
 
 #if HAS_UNO || NETFX_CORE
-        this.Suspending += OnSuspending;
+        Suspending += OnSuspending;
 #endif
     }
 
@@ -42,7 +44,7 @@ public sealed partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
 #if DEBUG
-        if (System.Diagnostics.Debugger.IsAttached)
+        if (Debugger.IsAttached)
         {
             // this.DebugSettings.EnableFrameRateCounter = true;
         }
@@ -52,7 +54,7 @@ public sealed partial class App : Application
         _window = new Window();
         _window.Activate();
 #else
-        _window = Windows.UI.Xaml.Window.Current;
+        _window = Window.Current;
 #endif
 
         var rootFrame = _window.Content as Frame;
@@ -169,7 +171,7 @@ public sealed partial class App : Application
             // builder.AddFilter("Uno.Foundation.WebAssemblyRuntime", LogLevel.Debug );
         });
 
-        global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
+        LogExtensionPoint.AmbientLoggerFactory = factory;
 
 #if HAS_UNO
 			global::Uno.UI.Adapter.Microsoft.Extensions.Logging.LoggingAdapter.Initialize();

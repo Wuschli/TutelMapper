@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Media;
@@ -11,10 +12,10 @@ namespace TutelMapper.ViewModels
 {
     public class TileInfo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
         private SKImage? _skiaImage;
-        private BitmapImage _imageSource;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public string Name { get; set; }
+        private BitmapImage? _imageSource;
+        public string? Name { get; set; }
         public FileSystemItem ImageFile { get; set; }
 
         public ImageSource ImageSource
@@ -53,7 +54,7 @@ namespace TutelMapper.ViewModels
 
         [NotifyPropertyChangedInvocator]
         [UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

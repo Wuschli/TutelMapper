@@ -43,7 +43,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\UPathExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\StreamExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\ZipHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\MapStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HexType.cs" />
