@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
+using Windows.UI.Core.Preview;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -57,6 +59,35 @@ namespace TutelMapper
 
             _pageIsActive = true;
             _ = DrawLoop();
+            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += CloseRequested;
+        }
+
+        private async void CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            if (!VM.UndoStack.HasUnsavedChanges)
+                return;
+            var deferral = e.GetDeferral();
+            var dialog = new MessageDialog("The map is about to close, would you like to save your changes?", "Unsaved Changes");
+            var yesCommand = new UICommand("Yes");
+            var noCommand = new UICommand("No");
+            var cancelCommand = new UICommand("Cancel");
+            dialog.Commands.Add(yesCommand);
+            dialog.Commands.Add(noCommand);
+            dialog.Commands.Add(cancelCommand);
+
+            var result = await dialog.ShowAsync();
+            if (result == cancelCommand)
+            {
+                //cancel close by handling the event
+                e.Handled = true;
+            }
+
+            if (result == yesCommand)
+            {
+                await VM.Save();
+            }
+
+            deferral.Complete();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

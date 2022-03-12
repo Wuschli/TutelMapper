@@ -12,6 +12,7 @@ namespace TutelMapper.Util
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int StackPointer { get; private set; } = -1;
+        public bool HasUnsavedChanges { get; set; }
         public ObservableCollection<ICommand> Stack { get; } = new();
 
         public async Task Do(ICommand command)
@@ -22,6 +23,7 @@ namespace TutelMapper.Util
             await command.Do();
             Stack.Add(command);
             StackPointer = Stack.Count - 1;
+            HasUnsavedChanges = true;
         }
 
         public async Task Undo()
@@ -32,6 +34,7 @@ namespace TutelMapper.Util
             var command = Stack[StackPointer];
             await command.Undo();
             StackPointer--;
+            HasUnsavedChanges = true;
         }
 
         public async Task Redo()
@@ -41,6 +44,7 @@ namespace TutelMapper.Util
             var command = Stack[StackPointer + 1];
             await command.Do();
             StackPointer++;
+            HasUnsavedChanges = true;
         }
 
         [NotifyPropertyChangedInvocator]

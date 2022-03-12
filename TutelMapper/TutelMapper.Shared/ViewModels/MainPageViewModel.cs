@@ -97,6 +97,7 @@ namespace TutelMapper.ViewModels
 
                 using var stream = await file.OpenStreamForWriteAsync();
                 await MessagePackSerializer.SerializeAsync(stream, MapData);
+                UndoStack.HasUnsavedChanges = false;
             }
             catch (Exception e)
             {
@@ -126,6 +127,7 @@ namespace TutelMapper.ViewModels
 #if WINDOWS_UWP
                 MapData.FaToken = StorageApplicationPermissions.FutureAccessList.Add(file);
 #endif
+                UndoStack.HasUnsavedChanges = false;
             }
         }
 
