@@ -40,7 +40,7 @@ namespace TutelMapper.ViewModels
             Offset = new SKPoint(96f, 160f);
         }
 
-        public async Task Load()
+        public async Task Open()
         {
             try
             {

@@ -27,19 +27,39 @@
 
             <AppBarButton Icon="Page2"
                           Click="{x:Bind VM.New}"
-                          ToolTipService.ToolTip="New" />
+                          ToolTipService.ToolTip="New (Ctrl+N)">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="N" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <AppBarButton Icon="OpenFile"
-                          Click="{x:Bind VM.Load}"
-                          ToolTipService.ToolTip="Load" />
+                          Click="{x:Bind VM.Open}"
+                          ToolTipService.ToolTip="Open (Ctrl+O)">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="O" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <AppBarButton Icon="Save"
                           Click="{x:Bind VM.Save}"
-                          ToolTipService.ToolTip="Save" />
+                          ToolTipService.ToolTip="Save (Ctrl+S)">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="S" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <AppBarButton Icon="Undo"
                           Click="{x:Bind VM.Undo}"
-                          ToolTipService.ToolTip="Undo" />
+                          ToolTipService.ToolTip="Undo (Ctrl+Z)">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="Z" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
             <AppBarButton Icon="Redo"
                           Click="{x:Bind VM.Redo}"
-                          ToolTipService.ToolTip="Redo" />
+                          ToolTipService.ToolTip="Redo (Ctrl+Y)">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="Y" />
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
         </CommandBar>
 
         <ScrollViewer controls:DockPanel.Dock="Left"
@@ -78,7 +98,7 @@
                     </ListView>
                 </ScrollViewer>
                 <Button Content="Add Layer" Click="{x:Bind VM.AddLayer}" />
-                <ScrollViewer>
+                <!--<ScrollViewer>
                     <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="viewModels:PointerInfo">
@@ -86,7 +106,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </ScrollViewer>
+                </ScrollViewer>-->
             </StackPanel>
             <ScrollViewer Grid.Row="1" Name="HistoryScrollViewer" VerticalContentAlignment="Bottom"
                           VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible"
