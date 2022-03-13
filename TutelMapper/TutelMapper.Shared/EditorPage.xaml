@@ -92,8 +92,8 @@
                             <RadioButton ToolTipService.ToolTip="{x:Bind Name}"
                                          IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
                                          Style="{ThemeResource TileSelectRadioButtonStyle}"
-                                         Width="80px"
-                                         Height="80px"
+                                         Width="60px"
+                                         Height="60px"
                                          GroupName="TileSelection">
                                 <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
                             </RadioButton>
