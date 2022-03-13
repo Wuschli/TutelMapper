@@ -117,6 +117,11 @@
                         CanReorderItems="True"
                         AllowDrop="True"
                         DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
+                        <ListView.Resources>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="LightGray" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="LightGray" />
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Gray" />
+                        </ListView.Resources>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
                                 <Grid HorizontalAlignment="Stretch"
@@ -150,7 +155,7 @@
                                                   Style="{ThemeResource VisibilityToggleButtonStyle}"
                                                   VerticalContentAlignment="Center"
                                                   Click="SetDirty"
-                                                  IsDoubleTapEnabled="True"/>
+                                                  IsDoubleTapEnabled="True" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
