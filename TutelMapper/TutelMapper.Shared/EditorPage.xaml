@@ -118,7 +118,7 @@
                     <RowDefinition Height="300" MinHeight="200" />
                 </Grid.RowDefinitions>
                 <ScrollViewer Grid.Row="0">
-                    <ListView
+                    <ListView Style="{StaticResource NoAnimationListView}"
                         ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
                         SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
                         CanReorderItems="True"
@@ -191,6 +191,7 @@
                               VerticalScrollMode="Enabled"
                               Padding="0 3 0 0">
                     <ListView Name="HistoryListView"
+                              Style="{StaticResource NoAnimationListView}"
                               ItemsSource="{x:Bind VM.UndoStack.Stack}"
                               Margin="10"
                               SelectionMode="None">

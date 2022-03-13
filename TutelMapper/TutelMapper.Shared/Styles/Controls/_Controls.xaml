@@ -7,5 +7,6 @@
         <ResourceDictionary Source="RadioButton.xaml"></ResourceDictionary>
         <ResourceDictionary Source="TextBox.xaml"></ResourceDictionary>
         <ResourceDictionary Source="ToggleButton.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="ListView.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
