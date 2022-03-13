@@ -14,7 +14,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <controls:DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <CommandBar IsDynamicOverflowEnabled="False"
                     OverflowButtonVisibility="Collapsed"
                     controls:DockPanel.Dock="Top">
@@ -62,55 +66,58 @@
                 </AppBarButton.KeyboardAccelerators>
             </AppBarButton>
         </CommandBar>
-
-        <Grid controls:DockPanel.Dock="Left"
-              Width="300px">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20 0" Padding="0">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="tools:ITool">
-                        <RadioButton IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
-                                     Style="{ThemeResource TileSelectRadioButtonStyle}"
-                                     Width="50px"
-                                     Height="50px"
-                                     FontSize="36"
-                                     FontFamily="Segoe MDL2 Assets"
-                                     Content="{x:Bind Icon}"
-                                     VerticalAlignment="Stretch"
-                                     VerticalContentAlignment="Center"
-                                     ToolTipService.ToolTip="{x:Bind Name}"
-                                     GroupName="ToolSelection" />
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-            <ScrollViewer Grid.Row="1" Margin="0 20">
-                <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20 0" Padding="0">
+        <Grid Grid.Row="1" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="232" Width="300" />
+                <ColumnDefinition />
+                <ColumnDefinition MinWidth="200" Width="250" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20 0" Padding="0">
                     <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:TileInfo">
-                            <RadioButton ToolTipService.ToolTip="{x:Bind Name}"
-                                         IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                        <DataTemplate x:DataType="tools:ITool">
+                            <RadioButton IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
                                          Style="{ThemeResource TileSelectRadioButtonStyle}"
-                                         Width="60px"
-                                         Height="60px"
-                                         GroupName="TileSelection">
-                                <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
-                            </RadioButton>
+                                         Width="50px"
+                                         Height="50px"
+                                         FontSize="36"
+                                         FontFamily="Segoe MDL2 Assets"
+                                         Content="{x:Bind Icon}"
+                                         VerticalAlignment="Stretch"
+                                         VerticalContentAlignment="Center"
+                                         ToolTipService.ToolTip="{x:Bind Name}"
+                                         GroupName="ToolSelection" />
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-            </ScrollViewer>
-        </Grid>
-        <Grid controls:DockPanel.Dock="Right"
-              Width="250">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="300" />
-            </Grid.RowDefinitions>
-            <StackPanel>
-                <ScrollViewer Height="300">
+                <ScrollViewer Grid.Row="1" Margin="0 20">
+                    <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20 0" Padding="0">
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:TileInfo">
+                                <RadioButton ToolTipService.ToolTip="{x:Bind Name}"
+                                             IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
+                                             Style="{ThemeResource TileSelectRadioButtonStyle}"
+                                             Width="60px"
+                                             Height="60px"
+                                             GroupName="TileSelection">
+                                    <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
+                                </RadioButton>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="200"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="300" MinHeight="200" />
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0">
                     <ListView
                         ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
                         SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
@@ -167,7 +174,44 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                 </ScrollViewer>
-                <Grid BorderThickness="0 1"
+
+                <!--<ScrollViewer>
+                    <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:PointerInfo">
+                                <TextBlock Text="{x:Bind Position, Mode=OneWay}"></TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>-->
+                <ScrollViewer Grid.Row="2" Name="HistoryScrollViewer"
+                              VerticalContentAlignment="Bottom"
+                              VerticalAlignment="Bottom"
+                              VerticalScrollBarVisibility="Visible"
+                              VerticalScrollMode="Enabled"
+                              Padding="0 3 0 0">
+                    <ListView Name="HistoryListView"
+                              ItemsSource="{x:Bind VM.UndoStack.Stack}"
+                              Margin="10"
+                              SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="MinHeight" Value="0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="commands:ICommand">
+                                <TextBlock Margin="0" Padding="0" Height="Auto" LineHeight="20"
+                                           Text="{x:Bind ToString()}"
+                                           Foreground="{Binding IsApplied, Converter= {StaticResource HistoryIsAppliedConverter}}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+                <Grid Grid.Row="1" BorderThickness="0 1 0 0"
                       BorderBrush="LightGray"
                       HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
@@ -181,50 +225,58 @@
                                 Style="{ThemeResource NavigationBackButtonSmallStyle}" />
                     </StackPanel>
                 </Grid>
+                <controls:GridSplitter
+                    Grid.Row="1"
+                    ResizeBehavior="PreviousAndNext"
+                    VerticalAlignment="Top"
+                    Height="8">
+                    <controls:GridSplitter.RenderTransform>
+                        <TranslateTransform Y="32" />
+                    </controls:GridSplitter.RenderTransform>
+                    <!--<controls:GridSplitter.Element>
+                        <TextBlock HorizontalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   VerticalAlignment="Center"
+                                   Text="&#xE76F;"
+                                   Foreground="White"
+                                   FontFamily="Segoe MDL2 Assets"/>
+                    </controls:GridSplitter.Element>-->
+                </controls:GridSplitter>
+            </Grid>
+            <skia:SKXamlCanvas Grid.Column="1" x:Name="Canvas"
+                               PaintSurface="OnPaintSurface"
+                               PointerMoved="OnPointerMoved"
+                               PointerPressed="OnPointerPressed"
+                               PointerReleased="OnPointerReleased"
+                               PointerEntered="OnPointerEntered"
+                               PointerExited="OnPointerExited"
+                               PointerWheelChanged="OnPointerWheelScrolled"
+                               Tapped="OnTapped" />
 
-                <!--<ScrollViewer>
-                    <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:PointerInfo">
-                                <TextBlock Text="{x:Bind Position, Mode=OneWay}"></TextBlock>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>-->
-            </StackPanel>
-            <ScrollViewer Grid.Row="1" Name="HistoryScrollViewer" VerticalContentAlignment="Bottom"
-                          VerticalAlignment="Bottom" VerticalScrollBarVisibility="Visible"
-                          VerticalScrollMode="Enabled">
-                <ListView Name="HistoryListView"
-                          ItemsSource="{x:Bind VM.UndoStack.Stack}"
-                          Margin="10"
-                          SelectionMode="None">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="BorderThickness" Value="0" />
-                            <Setter Property="Margin" Value="0" />
-                            <Setter Property="Padding" Value="0" />
-                            <Setter Property="MinHeight" Value="0" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="commands:ICommand">
-                            <TextBlock Margin="0" Padding="0" Height="Auto" LineHeight="20"
-                                       Text="{x:Bind ToString()}"
-                                       Foreground="{Binding IsApplied, Converter= {StaticResource HistoryIsAppliedConverter}}" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
+            <controls:GridSplitter
+                GripperCursor="Default"
+                HorizontalAlignment="Left"
+                Grid.Column="1"
+                ResizeDirection="Auto"
+                ResizeBehavior="BasedOnAlignment"
+                CursorBehavior="ChangeOnSplitterHover"
+                Width="8">
+                <controls:GridSplitter.RenderTransform>
+                    <TranslateTransform X="-16" />
+                </controls:GridSplitter.RenderTransform>
+            </controls:GridSplitter>
+            <controls:GridSplitter
+                GripperCursor="Default"
+                HorizontalAlignment="Left"
+                Grid.Column="2"
+                ResizeDirection="Auto"
+                ResizeBehavior="BasedOnAlignment"
+                CursorBehavior="ChangeOnSplitterHover"
+                Width="8">
+                <controls:GridSplitter.RenderTransform>
+                    <TranslateTransform X="-16" />
+                </controls:GridSplitter.RenderTransform>
+            </controls:GridSplitter>
         </Grid>
-        <skia:SKXamlCanvas x:Name="Canvas"
-                           PaintSurface="OnPaintSurface"
-                           PointerMoved="OnPointerMoved"
-                           PointerPressed="OnPointerPressed"
-                           PointerReleased="OnPointerReleased"
-                           PointerEntered="OnPointerEntered"
-                           PointerExited="OnPointerExited"
-                           PointerWheelChanged="OnPointerWheelScrolled"
-                           Tapped="OnTapped" />
-    </controls:DockPanel>
+    </Grid>
 </Page>
