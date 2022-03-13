@@ -103,7 +103,7 @@
             </ScrollViewer>
         </Grid>
         <Grid controls:DockPanel.Dock="Right"
-              Width="300">
+              Width="250">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="300" />
@@ -126,16 +126,6 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox Text="{x:Bind DisplayName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                    <!--<Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;"
-                                            ToolTipService.ToolTip="Move Up"
-                                            Style="{StaticResource NavigationBackButtonSmallStyle}"
-                                            VerticalContentAlignment="Center"
-                                            Click="MoveLayerUp" />-->
-                                    <!--<Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;"
-                                            ToolTipService.ToolTip="Move Down"
-                                            Style="{StaticResource NavigationBackButtonSmallStyle}"
-                                            VerticalContentAlignment="Center"
-                                            Click="MoveLayerDown" />-->
                                     <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE711;"
                                             ToolTipService.ToolTip="Delete"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
