@@ -6,8 +6,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using MessagePack;
-using Microsoft.Toolkit.Uwp.UI;
-using PropertyChanged;
 using TutelMapper.Annotations;
 using TutelMapper.ViewModels;
 

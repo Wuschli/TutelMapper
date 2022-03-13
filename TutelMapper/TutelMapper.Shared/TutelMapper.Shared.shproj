@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <_Globbled_Page Remove="Dialogs\NewMapDialog.xaml" />
+    <_Globbled_Page Remove="Styles\Constants.xaml" />
     <_Globbled_Page Remove="Styles\Controls\ToggleButton - Copy.xaml" />
     <_Globbled_Page Remove="Templates\Notification.xaml" />
     <_Globbled_Page Remove="Templates\_Templates.xaml" />
