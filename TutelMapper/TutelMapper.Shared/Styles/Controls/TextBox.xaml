@@ -29,7 +29,7 @@
                                                                     Storyboard.TargetName="GlyphElement"
                                                                     Storyboard.TargetProperty="Foreground">
                                                                     <DiscreteObjectKeyFrame KeyTime="0"
-                                                                        Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                                                        Value="Black" />
                                                                 </ObjectAnimationUsingKeyFrames>
                                                             </Storyboard>
                                                         </VisualState>
@@ -39,7 +39,7 @@
                                                                     Storyboard.TargetName="ButtonLayoutGrid"
                                                                     Storyboard.TargetProperty="Background">
                                                                     <DiscreteObjectKeyFrame KeyTime="0"
-                                                                        Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                                                        Value="Gray" />
                                                                 </ObjectAnimationUsingKeyFrames>
                                                                 <ObjectAnimationUsingKeyFrames
                                                                     Storyboard.TargetName="GlyphElement"
