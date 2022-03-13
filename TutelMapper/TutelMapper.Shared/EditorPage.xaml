@@ -10,6 +10,7 @@
     xmlns:data="using:TutelMapper.Data"
     xmlns:tools="using:TutelMapper.Tools"
     xmlns:commands="using:TutelMapper.Commands"
+    xmlns:util="using:TutelMapper.Util"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -114,10 +115,13 @@
                         ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
                         SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
                         CanReorderItems="True"
-                        AllowDrop="True">
+                        AllowDrop="True"
+                        DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
-                                <Grid HorizontalAlignment="Stretch">
+                                <Grid HorizontalAlignment="Stretch"
+                                      Padding="0"
+                                      Margin="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="Auto" />
@@ -125,8 +129,17 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBox Text="{x:Bind DisplayName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                    <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE711;"
+                                    <TextBox x:Name="DisplayName"
+                                             PlaceholderText="Layer Name"
+                                             Text="{x:Bind DisplayName, Mode=TwoWay}"
+                                             IsEnabled="{x:Bind IsEditingDisplayName, Mode=OneWay}"
+                                             util:FocusExtension.IsFocused="{Binding IsEditingDisplayName, Mode=TwoWay}"
+                                             AllowFocusWhenDisabled="True"
+                                             VerticalAlignment="Center"
+                                             LostFocus="{x:Bind DisableEditing}"
+                                             GotFocus="{x:Bind GotFocus}"
+                                             Style="{StaticResource TransparentTextBox}" />
+                                    <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;"
                                             ToolTipService.ToolTip="Delete"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
                                             VerticalContentAlignment="Center"
@@ -136,7 +149,8 @@
                                                   IsChecked="{x:Bind IsVisible, Mode=TwoWay}"
                                                   Style="{ThemeResource VisibilityToggleButtonStyle}"
                                                   VerticalContentAlignment="Center"
-                                                  Click="SetDirty" />
+                                                  Click="SetDirty"
+                                                  IsDoubleTapEnabled="True"/>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

@@ -40,6 +40,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Tools\PointerTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\BufferedZipFileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystem\SeamlessZipFileSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\FocusExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UPathExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\StreamExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\ZipHelper.cs" />
@@ -65,6 +66,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)OverviewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Styles\Controls\TextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,7 +1,13 @@
 ﻿#nullable enable
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using MessagePack;
+using Microsoft.Toolkit.Uwp.UI;
+using PropertyChanged;
 using TutelMapper.Annotations;
 using TutelMapper.ViewModels;
 
@@ -50,13 +56,24 @@ public class MapData : INotifyPropertyChanged
 
     [Key(6)]
     public int HexSize { get; set; } = 64;
+
+
+    public void EnableEditing(object sender, RoutedEventArgs e)
+    {
+        if (!(e.OriginalSource is ListViewItemPresenter))
+            return;
+        var selectedLayer = Layers[SelectedLayerIndex];
+        selectedLayer.EnableEditing();
+    }
 }
 
 [MessagePackObject]
 public class MapLayer : INotifyPropertyChanged
 {
-    [UsedImplicitly]
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    [IgnoreMember]
+    public bool IsEditingDisplayName { get; set; }
 
     [Key(0)]
     public string? DisplayName { get; set; }
@@ -66,4 +83,29 @@ public class MapLayer : INotifyPropertyChanged
 
     [Key(2)]
     public string?[,] Data { get; set; } = new string?[0, 0];
+
+    public void GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (e.OriginalSource is TextBox textBox)
+        {
+            textBox.SelectAll();
+        }
+    }
+
+    public void EnableEditing()
+    {
+        IsEditingDisplayName = true;
+    }
+
+    public void DisableEditing()
+    {
+        IsEditingDisplayName = false;
+    }
+
+    [NotifyPropertyChangedInvocator]
+    [UsedImplicitly]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

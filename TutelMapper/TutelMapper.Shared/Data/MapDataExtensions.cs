@@ -11,6 +11,7 @@ public static class MapDataExtensions
             IsVisible = true,
         };
         map.Layers.Insert(map.SelectedLayerIndex, layer);
+        layer.DisplayName = layerName;
     }
 
     public static void MoveLayerUp(this MapData map, MapLayer layer)
