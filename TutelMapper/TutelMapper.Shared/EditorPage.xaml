@@ -79,6 +79,7 @@
                                      FontFamily="Segoe MDL2 Assets"
                                      Content="{x:Bind Icon}"
                                      VerticalAlignment="Stretch"
+                                     VerticalContentAlignment="Center"
                                      ToolTipService.ToolTip="{x:Bind Name}"
                                      GroupName="ToolSelection" />
                     </DataTemplate>
@@ -120,20 +121,30 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox Text="{x:Bind DisplayName, Mode=TwoWay}" VerticalAlignment="Center" />
                                     <Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;"
                                             ToolTipService.ToolTip="Move Up"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            VerticalContentAlignment="Center"
                                             Click="MoveLayerUp" />
                                     <Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;"
                                             ToolTipService.ToolTip="Move Down"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            VerticalContentAlignment="Center"
                                             Click="MoveLayerDown" />
                                     <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE711;"
                                             ToolTipService.ToolTip="Delete"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
+                                            VerticalContentAlignment="Center"
                                             Click="DeleteLayer" />
+                                    <ToggleButton Grid.Column="4" FontFamily="Segoe MDL2 Assets" Content="&#xE7B3;"
+                                                  ToolTipService.ToolTip="Toggle Visibility"
+                                                  IsChecked="{x:Bind IsVisible, Mode=TwoWay}"
+                                                  Style="{ThemeResource VisibilityToggleButtonStyle}"
+                                                  VerticalContentAlignment="Center"
+                                                  Click="SetDirty" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -145,6 +156,7 @@
                     </ListView>
                 </ScrollViewer>
                 <Button Content="Add Layer" Click="{x:Bind VM.AddLayer}" />
+
                 <!--<ScrollViewer>
                     <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">
                         <ListView.ItemTemplate>

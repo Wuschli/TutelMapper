@@ -8,7 +8,7 @@
         <Setter Property="FontSize"
                 Value="18" />
         <Setter Property="Padding"
-                Value="0,8" />
+                Value="0,0" />
         <Setter Property="MinWidth"
                 Value="0" />
         <Setter Property="HorizontalAlignment"
@@ -19,6 +19,8 @@
                 Value="Stretch" />
         <Setter Property="VerticalContentAlignment"
                 Value="Stretch" />
+        <Setter Target="Foreground" 
+                Value="{ThemeResource DefaultTextForegroundThemeBrush}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -46,6 +48,8 @@
                                                 Value="{ThemeResource ToggleButtonCheckedPointerOverBackgroundThemeBrush}" />
                                         <Setter Target="RootGrid.BorderBrush"
                                                 Value="{ThemeResource ToggleButtonCheckedBorderThemeBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" 
+                                                Value="WhiteSmoke"/>
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Unchecked" />

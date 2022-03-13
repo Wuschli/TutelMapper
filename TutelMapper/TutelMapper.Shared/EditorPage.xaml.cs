@@ -183,6 +183,8 @@ namespace TutelMapper
                 for (var layerIndex = VM.MapData.Layers.Count - 1; layerIndex >= 0; layerIndex--)
                 {
                     var layer = VM.MapData.Layers[layerIndex];
+                    if (!layer.IsVisible)
+                        continue;
                     for (int row = 0; row < layer.Data.GetLength(1); row++)
                     {
                         //draw odd tiles in row
@@ -387,6 +389,11 @@ namespace TutelMapper
                 VM.MapData?.DeleteLayer(layer);
                 _somethingChanged = true;
             }
+        }
+
+        private void SetDirty(object sender, RoutedEventArgs e)
+        {
+            _somethingChanged = true;
         }
 
         [NotifyPropertyChangedInvocator]
