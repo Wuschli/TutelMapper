@@ -386,5 +386,15 @@ namespace TutelMapper
             var dialog = new NewMapDialog(VM);
             await dialog.ShowAsync();
         }
+
+        public async Task OpenGitHub()
+        {
+
+            // The URI to launch
+            var uriBing = new Uri(@"https://github.com/Wuschli/TutelMapper");
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uriBing);
+        }
     }
 }

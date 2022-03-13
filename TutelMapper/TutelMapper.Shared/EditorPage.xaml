@@ -30,6 +30,12 @@
                               Height="48px" />
             </CommandBar.Content>
 
+            <AppBarButton
+                          Click="{x:Bind OpenGitHub}"
+                          ToolTipService.ToolTip="Browse Source">
+                <Image Source="ms-appx:///Assets/Icons/GitHub.png"></Image>
+            </AppBarButton>
+
             <AppBarButton Icon="Page2"
                           Click="{x:Bind NewMap}"
                           ToolTipService.ToolTip="New (Ctrl+N)">

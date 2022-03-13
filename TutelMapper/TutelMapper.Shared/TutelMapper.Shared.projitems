@@ -107,6 +107,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-400.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-100.png" />
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\tiles.zip" />
   </ItemGroup>
