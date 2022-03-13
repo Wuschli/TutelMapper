@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -21,12 +22,37 @@ namespace TutelMapper.ViewModels;
 
 public class MainPageViewModel : INotifyPropertyChanged
 {
+    private MapData? _mapData;
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    public bool SomethingChanged { get; set; }
     public float Zoom { get; set; } = 1f;
     public SKPoint Offset { get; set; }
     public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
-    public MapData? MapData { get; private set; }
+
+    public MapData? MapData
+    {
+        get => _mapData;
+        private set
+        {
+            if (_mapData != null)
+                _mapData.Layers.CollectionChanged -= SetDirty;
+            _mapData = value;
+            if (_mapData != null)
+                _mapData.Layers.CollectionChanged += SetDirty;
+        }
+    }
+
+    public void SetDirty()
+    {
+        SomethingChanged = true;
+    }
+
+    private void SetDirty(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        SetDirty();
+    }
+
     public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
     public ITool? SelectedTool => Tools.FirstOrDefault(tool => tool.IsSelected);
     public List<ITool> Tools { get; } = new() { new PointerTool { IsSelected = true }, new BrushTool(), new EraserTool() };

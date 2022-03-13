@@ -29,7 +29,6 @@ namespace TutelMapper
     public sealed partial class EditorPage : Page, INotifyPropertyChanged
     {
         private bool _pageIsActive;
-        private bool _somethingChanged;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -44,7 +43,7 @@ namespace TutelMapper
             InitializeComponent();
             VM.NewMap(40, 40, HexType.Flat, 64);
 
-            VM.PropertyChanged += (_, _) => _somethingChanged = true;
+            VM.PropertyChanged += (_, _) => VM.SetDirty();
             HistoryListView.SizeChanged += (_, _) => HistoryScrollViewer.ChangeView(null, HistoryScrollViewer.ExtentHeight, null);
         }
 
@@ -110,10 +109,10 @@ namespace TutelMapper
         {
             while (_pageIsActive)
             {
-                if (_somethingChanged)
+                if (VM.SomethingChanged)
                 {
                     Canvas.Invalidate();
-                    _somethingChanged = false;
+                    VM.SomethingChanged = false;
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(1.0 / 60));
@@ -260,7 +259,7 @@ namespace TutelMapper
             }
 
             pointerInfo.Position = newPosition;
-            _somethingChanged = true;
+            VM.SetDirty();
         }
 
         private void OnPointerWheelScrolled(object sender, PointerRoutedEventArgs e)
@@ -355,7 +354,7 @@ namespace TutelMapper
             if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < layer.Data.GetLength(0) && offsetCoordinates.Row < layer.Data.GetLength(1))
             {
                 VM.SelectedTool.Execute(VM.SelectedTile, layer.Data, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
-                    .ContinueWith(_ => _somethingChanged = true);
+                    .ContinueWith(_ => VM.SetDirty());
             }
         }
 
@@ -364,36 +363,15 @@ namespace TutelMapper
             App.TryGoBack();
         }
 
-        private void MoveLayerUp(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is MapLayer layer)
-            {
-                VM.MapData?.MoveLayerUp(layer);
-                _somethingChanged = true;
-            }
-        }
-
-        private void MoveLayerDown(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.DataContext is MapLayer layer)
-            {
-                VM.MapData?.MoveLayerDown(layer);
-                _somethingChanged = true;
-            }
-        }
-
         private void DeleteLayer(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.DataContext is MapLayer layer)
-            {
                 VM.MapData?.DeleteLayer(layer);
-                _somethingChanged = true;
-            }
         }
 
         private void SetDirty(object sender, RoutedEventArgs e)
         {
-            _somethingChanged = true;
+            VM.SetDirty();
         }
 
         [NotifyPropertyChangedInvocator]

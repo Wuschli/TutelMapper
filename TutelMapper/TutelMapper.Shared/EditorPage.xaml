@@ -112,7 +112,9 @@
                 <ScrollViewer Height="300">
                     <ListView
                         ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
-                        SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}">
+                        SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
+                        CanReorderItems="True"
+                        AllowDrop="True">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
                                 <Grid HorizontalAlignment="Stretch">
@@ -124,16 +126,16 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBox Text="{x:Bind DisplayName, Mode=TwoWay}" VerticalAlignment="Center" />
-                                    <Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;"
+                                    <!--<Button Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;"
                                             ToolTipService.ToolTip="Move Up"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
                                             VerticalContentAlignment="Center"
-                                            Click="MoveLayerUp" />
-                                    <Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;"
+                                            Click="MoveLayerUp" />-->
+                                    <!--<Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;"
                                             ToolTipService.ToolTip="Move Down"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
                                             VerticalContentAlignment="Center"
-                                            Click="MoveLayerDown" />
+                                            Click="MoveLayerDown" />-->
                                     <Button Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xE711;"
                                             ToolTipService.ToolTip="Delete"
                                             Style="{StaticResource NavigationBackButtonSmallStyle}"
@@ -155,7 +157,20 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
                 </ScrollViewer>
-                <Button Content="Add Layer" Click="{x:Bind VM.AddLayer}" />
+                <Grid BorderThickness="0 1"
+                      BorderBrush="LightGray"
+                      HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xF8AA;"
+                                ToolTipService.ToolTip="Add Layer"
+                                Click="{x:Bind VM.AddLayer}"
+                                Style="{ThemeResource NavigationBackButtonSmallStyle}" />
+                    </StackPanel>
+                </Grid>
 
                 <!--<ScrollViewer>
                     <ListView ItemsSource="{x:Bind Pointers, Mode=OneWay}">

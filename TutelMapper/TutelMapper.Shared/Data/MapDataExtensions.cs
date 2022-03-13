@@ -10,7 +10,7 @@ public static class MapDataExtensions
             Data = new string[map.Width, map.Height],
             IsVisible = true,
         };
-        map.Layers.Add(layer);
+        map.Layers.Insert(map.SelectedLayerIndex, layer);
     }
 
     public static void MoveLayerUp(this MapData map, MapLayer layer)
