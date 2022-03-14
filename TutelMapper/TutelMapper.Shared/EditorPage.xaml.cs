@@ -389,12 +389,11 @@ namespace TutelMapper
 
         public async Task OpenGitHub()
         {
-
             // The URI to launch
-            var uriBing = new Uri(@"https://github.com/Wuschli/TutelMapper");
+            var uri = new Uri(@"https://github.com/Wuschli/TutelMapper");
 
             // Launch the URI
-            var success = await Windows.System.Launcher.LaunchUriAsync(uriBing);
+            await Windows.System.Launcher.LaunchUriAsync(uri);
         }
     }
 }
