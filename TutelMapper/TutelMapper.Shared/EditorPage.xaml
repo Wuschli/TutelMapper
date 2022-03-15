@@ -14,6 +14,16 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="Gray" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="Gray" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPressed" Color="DimGray" />
+
+        <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="LightGray" />
+        <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="LightGray" />
+        <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Gray" />
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,8 +41,8 @@
             </CommandBar.Content>
 
             <AppBarButton
-                          Click="{x:Bind OpenGitHub}"
-                          ToolTipService.ToolTip="Browse Source">
+                Click="{x:Bind OpenGitHub}"
+                ToolTipService.ToolTip="Browse Source">
                 <Image Source="ms-appx:///Assets/Icons/GitHub.png"></Image>
             </AppBarButton>
 
@@ -83,35 +93,35 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <GridView ItemsSource="{x:Bind VM.Tools}" Margin="20 0" Padding="0">
+                <GridView ItemsSource="{x:Bind VM.Tools}"
+                          SelectedItem="{x:Bind VM.SelectedTool, Mode=TwoWay}"
+                          SelectionMode="Single"
+                          ItemContainerStyle="{StaticResource ToolSelectionItemContainerStyle}" 
+                          Margin="20 0"
+                          Padding="0">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="tools:ITool">
-                            <RadioButton IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
-                                         Style="{ThemeResource TileSelectRadioButtonStyle}"
-                                         Width="50px"
-                                         Height="50px"
-                                         FontSize="36"
-                                         FontFamily="Segoe MDL2 Assets"
-                                         Content="{x:Bind Icon}"
-                                         VerticalAlignment="Stretch"
-                                         VerticalContentAlignment="Center"
-                                         ToolTipService.ToolTip="{x:Bind Name}"
-                                         GroupName="ToolSelection" />
+                            <TextBlock FontSize="36"
+                                       Padding="10"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       Text="{x:Bind Icon}"
+                                       ToolTipService.ToolTip="{x:Bind Name}" />
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
                 <ScrollViewer Grid.Row="1" Margin="0 20">
-                    <GridView ItemsSource="{x:Bind TileLibrary.Tiles}" Margin="20 0" Padding="0">
+                    <GridView ItemsSource="{x:Bind TileLibrary.Tiles}"
+                              SelectedItem="{x:Bind VM.SelectedTile, Mode=TwoWay}"
+                              SelectionMode="Single"
+                              Margin="20 0"
+                              Padding="0">
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:TileInfo">
-                                <RadioButton ToolTipService.ToolTip="{x:Bind Name}"
-                                             IsChecked="{x:Bind IsSelected,Mode=TwoWay}"
-                                             Style="{ThemeResource TileSelectRadioButtonStyle}"
-                                             Width="60px"
-                                             Height="60px"
-                                             GroupName="TileSelection">
-                                    <Image Source="{x:Bind ImageSource, Mode=OneWay}"></Image>
-                                </RadioButton>
+                            <DataTemplate x:DataType="viewModels:ITileInfo">
+                                <Image Source="{x:Bind ImageSource, Mode=OneWay}"
+                                       ToolTipService.ToolTip="{x:Bind Name}"
+                                       Width="60px"
+                                       Height="60px">
+                                </Image>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
@@ -125,16 +135,11 @@
                 </Grid.RowDefinitions>
                 <ScrollViewer Grid.Row="0">
                     <ListView Style="{StaticResource NoAnimationListView}"
-                        ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
-                        SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
-                        CanReorderItems="True"
-                        AllowDrop="True"
-                        DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
-                        <ListView.Resources>
-                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="LightGray" />
-                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="LightGray" />
-                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Gray" />
-                        </ListView.Resources>
+                              ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
+                              SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
+                              CanReorderItems="True"
+                              AllowDrop="True"
+                              DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
                                 <Grid HorizontalAlignment="Stretch"

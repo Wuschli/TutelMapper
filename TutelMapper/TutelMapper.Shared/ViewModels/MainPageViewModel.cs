@@ -43,6 +43,16 @@ public class MainPageViewModel : INotifyPropertyChanged
         }
     }
 
+    public ITileInfo? SelectedTile { get; set; }
+    public ITool? SelectedTool { get; set; }
+    public List<ITool> Tools { get; } = new() { new BrushTool(), new EraserTool(), new PointerTool() };
+    public UndoStack UndoStack { get; } = new();
+
+    public MainPageViewModel()
+    {
+        SelectedTool = Tools[0];
+    }
+
     public void SetDirty()
     {
         SomethingChanged = true;
@@ -52,11 +62,6 @@ public class MainPageViewModel : INotifyPropertyChanged
     {
         SetDirty();
     }
-
-    public TileInfo? SelectedTile => App.TileLibrary.Tiles.FirstOrDefault(info => info.IsSelected);
-    public ITool? SelectedTool => Tools.FirstOrDefault(tool => tool.IsSelected);
-    public List<ITool> Tools { get; } = new() { new PointerTool { IsSelected = true }, new BrushTool(), new EraserTool() };
-    public UndoStack UndoStack { get; } = new();
 
     public void NewMap(int width, int height, HexType hexType, int hexSize)
     {

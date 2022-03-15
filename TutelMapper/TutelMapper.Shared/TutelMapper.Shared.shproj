@@ -19,13 +19,17 @@
     <_Globbed_Compile Remove="Tools\PointerTool.cs" />
     <_Globbed_Compile Remove="Util\FocusExtension.cs" />
     <_Globbed_Compile Remove="ViewModels\HexType.cs" />
+    <_Globbed_Compile Remove="ViewModels\ITileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <_Globbled_Page Remove="Dialogs\NewMapDialog.xaml" />
     <_Globbled_Page Remove="Styles\Constants - Copy.xaml" />
     <_Globbled_Page Remove="Styles\Constants.xaml" />
+    <_Globbled_Page Remove="Styles\Controls\GridViewItemContainer.xaml" />
     <_Globbled_Page Remove="Styles\Controls\ListView.xaml" />
+    <_Globbled_Page Remove="Styles\Controls\Reveals.xaml" />
     <_Globbled_Page Remove="Styles\Controls\ToggleButton - Copy.xaml" />
+    <_Globbled_Page Remove="Styles\Controls\ToolSelectionItemContainer.xaml" />
     <_Globbled_Page Remove="Templates\Notification.xaml" />
     <_Globbled_Page Remove="Templates\_Templates.xaml" />
   </ItemGroup>

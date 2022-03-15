@@ -6,59 +6,58 @@ using System.Threading.Tasks;
 using TutelMapper.Annotations;
 using TutelMapper.Commands;
 
-namespace TutelMapper.Util
+namespace TutelMapper.Util;
+
+public class UndoStack : INotifyPropertyChanged
 {
-    public class UndoStack : INotifyPropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public int StackPointer { get; private set; } = -1;
+    public bool HasUnsavedChanges { get; set; }
+    public ObservableCollection<ICommand> Stack { get; } = new();
+
+    public async Task Do(ICommand command)
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
+        while (Stack.Count - 1 > StackPointer)
+            Stack.RemoveAt(Stack.Count - 1);
 
-        public int StackPointer { get; private set; } = -1;
-        public bool HasUnsavedChanges { get; set; }
-        public ObservableCollection<ICommand> Stack { get; } = new();
+        await command.Do();
+        Stack.Add(command);
+        StackPointer = Stack.Count - 1;
+        HasUnsavedChanges = true;
+    }
 
-        public async Task Do(ICommand command)
-        {
-            while (Stack.Count - 1 > StackPointer)
-                Stack.RemoveAt(Stack.Count - 1);
+    public async Task Undo()
+    {
+        if (StackPointer <= -1)
+            return;
 
-            await command.Do();
-            Stack.Add(command);
-            StackPointer = Stack.Count - 1;
-            HasUnsavedChanges = true;
-        }
+        var command = Stack[StackPointer];
+        await command.Undo();
+        StackPointer--;
+        HasUnsavedChanges = true;
+    }
 
-        public async Task Undo()
-        {
-            if (StackPointer <= -1)
-                return;
+    public async Task Redo()
+    {
+        if (StackPointer >= Stack.Count - 1)
+            return;
+        var command = Stack[StackPointer + 1];
+        await command.Do();
+        StackPointer++;
+        HasUnsavedChanges = true;
+    }
 
-            var command = Stack[StackPointer];
-            await command.Undo();
-            StackPointer--;
-            HasUnsavedChanges = true;
-        }
+    [NotifyPropertyChangedInvocator]
+    [UsedImplicitly]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        public async Task Redo()
-        {
-            if (StackPointer >= Stack.Count - 1)
-                return;
-            var command = Stack[StackPointer + 1];
-            await command.Do();
-            StackPointer++;
-            HasUnsavedChanges = true;
-        }
-
-        [NotifyPropertyChangedInvocator]
-        [UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Clear()
-        {
-            StackPointer = -1;
-            Stack.Clear();
-        }
+    public void Clear()
+    {
+        StackPointer = -1;
+        Stack.Clear();
     }
 }

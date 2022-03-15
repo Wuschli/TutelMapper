@@ -14,21 +14,20 @@ public class EraserTool : ITool
     public bool CanUseOnDrag => true;
     public string Name => "Eraser";
     public string Icon => "\uE75C";
-    public bool IsSelected { get; set; }
 
-    public async Task Execute(TileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public async Task Execute(ITileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
     {
         if (string.IsNullOrEmpty(target[x, y]))
             return;
         await undoStack.Do(new EraseTileCommand(target, x, y));
     }
 
-    public bool CanPreview(TileInfo? selectedTile)
+    public bool CanPreview(ITileInfo? selectedTile)
     {
         return true;
     }
 
-    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, TileInfo? vmSelectedTile)
+    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileInfo? vmSelectedTile)
     {
     }
 }

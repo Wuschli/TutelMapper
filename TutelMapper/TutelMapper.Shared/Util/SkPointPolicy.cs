@@ -1,28 +1,27 @@
 ﻿using Barbar.HexGrid;
 using SkiaSharp;
 
-namespace TutelMapper.Util
+namespace TutelMapper.Util;
+
+public class SkPointPolicy : IPointPolicy<SKPoint>
 {
-    public class SkPointPolicy : IPointPolicy<SKPoint>
+    public SKPoint Create(double x, double y)
     {
-        public SKPoint Create(double x, double y)
-        {
-            return new SKPoint((float)x, (float)y);
-        }
+        return new SKPoint((float)x, (float)y);
+    }
 
-        public double GetX(SKPoint point)
-        {
-            return point.X;
-        }
+    public double GetX(SKPoint point)
+    {
+        return point.X;
+    }
 
-        public double GetY(SKPoint point)
-        {
-            return point.Y;
-        }
+    public double GetY(SKPoint point)
+    {
+        return point.Y;
+    }
 
-        public SKPoint Add(SKPoint a, SKPoint b)
-        {
-            return a + b;
-        }
+    public SKPoint Add(SKPoint a, SKPoint b)
+    {
+        return a + b;
     }
 }

@@ -13,19 +13,18 @@ public class PointerTool : ITool
     public bool CanUseOnDrag => true;
     public string Name => "Pointer";
     public string Icon => "\uF271";
-    public bool IsSelected { get; set; }
 
-    public Task Execute(TileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public Task Execute(ITileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
     {
         return Task.CompletedTask;
     }
 
-    public bool CanPreview(TileInfo? selectedTile)
+    public bool CanPreview(ITileInfo? selectedTile)
     {
         return false;
     }
 
-    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, TileInfo? vmSelectedTile)
+    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileInfo? vmSelectedTile)
     {
     }
 }

@@ -5,31 +5,30 @@ using Windows.Devices.Input;
 using SkiaSharp;
 using TutelMapper.Annotations;
 
-namespace TutelMapper.ViewModels
+namespace TutelMapper.ViewModels;
+
+public class PointerInfo : INotifyPropertyChanged
 {
-    public class PointerInfo : INotifyPropertyChanged
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public uint PointerId { get; }
+    public PointerDeviceType Type { get; }
+    public SKPoint Position { get; set; }
+
+    public PointerInfo(uint pointerId, PointerDeviceType type)
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public uint PointerId { get; }
-        public PointerDeviceType Type { get; }
-        public SKPoint Position { get; set; }
+        PointerId = pointerId;
+        Type = type;
+    }
 
-        public PointerInfo(uint pointerId, PointerDeviceType type)
-        {
-            PointerId = pointerId;
-            Type = type;
-        }
+    public override string ToString()
+    {
+        return $"{PointerId}: {Position}";
+    }
 
-        public override string ToString()
-        {
-            return $"{PointerId}: {Position}";
-        }
-
-        [NotifyPropertyChangedInvocator]
-        [UsedImplicitly]
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    [NotifyPropertyChangedInvocator]
+    [UsedImplicitly]
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

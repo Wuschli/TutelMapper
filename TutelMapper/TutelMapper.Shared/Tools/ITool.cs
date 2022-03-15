@@ -6,16 +6,14 @@ using TutelMapper.Data;
 using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
-namespace TutelMapper.Tools
+namespace TutelMapper.Tools;
+
+public interface ITool
 {
-    public interface ITool
-    {
-        bool CanUseOnDrag { get; }
-        string Name { get; }
-        string Icon { get; }
-        bool IsSelected { get; set; }
-        Task Execute(TileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack);
-        bool CanPreview(TileInfo? selectedTile);
-        void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, TileInfo? vmSelectedTile);
-    }
+    bool CanUseOnDrag { get; }
+    string Name { get; }
+    string Icon { get; }
+    Task Execute(ITileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack);
+    bool CanPreview(ITileInfo? selectedTile);
+    void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileInfo? vmSelectedTile);
 }
