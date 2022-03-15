@@ -13,7 +13,7 @@ public interface ITool
     bool CanUseOnDrag { get; }
     string Name { get; }
     string Icon { get; }
-    Task Execute(ITileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack);
-    bool CanPreview(ITileInfo? selectedTile);
-    void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileInfo? vmSelectedTile);
+    Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack);
+    bool CanPreview(ITileLibraryItem? selectedTile);
+    void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileLibraryItem? selectedTile);
 }

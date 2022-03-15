@@ -116,9 +116,9 @@
                               Margin="20 0"
                               Padding="0">
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:ITileInfo">
-                                <Image Source="{x:Bind ImageSource, Mode=OneWay}"
-                                       ToolTipService.ToolTip="{x:Bind Name}"
+                            <DataTemplate x:DataType="viewModels:ITileLibraryItem">
+                                <Image Source="{x:Bind PreviewImage, Mode=OneWay}"
+                                       ToolTipService.ToolTip="{x:Bind DisplayName}"
                                        Width="60px"
                                        Height="60px">
                                 </Image>

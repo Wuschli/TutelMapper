@@ -140,8 +140,10 @@ public class SeamlessZipFileSystem : Zio.FileSystems.FileSystem
 
         foreach (var zipFile in _fileSystem.EnumerateItems(UPath.Root, SearchOption.AllDirectories, ZipHelper.ZipSearchPredicate))
         {
-            var zipFilePath = zipFile.Path.GetFullPathWithoutExtension().FullName;
-            if (path.FullName.StartsWith(zipFilePath) || (searchOption == SearchOption.AllDirectories && zipFilePath.StartsWith(path.FullName)))
+            var zipFilePath = zipFile.Path.GetFullPathWithoutExtension();
+            if (zipFile.Path.IsInDirectory(path, searchOption == SearchOption.AllDirectories))
+                yield return new FileSystemItem(this, zipFilePath, true);
+            if (path.IsInDirectory(zipFilePath, true) || (searchOption == SearchOption.AllDirectories && zipFilePath.IsInDirectory(path, true)))
                 foreach (var item in ZipHelper.EnumerateItems(this, zipFile, zipFilePath))
                 {
                     yield return item;

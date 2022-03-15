@@ -126,7 +126,8 @@ public class BufferedZipFileSystem : Zio.FileSystems.FileSystem
 
         foreach (var item in ZipHelper.EnumerateItems(this, stream, UPath.Root))
         {
-            yield return item;
+            if (searchOption == SearchOption.AllDirectories || item.Path.IsInDirectory(path, false))
+                yield return item;
         }
     }
 

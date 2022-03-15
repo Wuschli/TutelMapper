@@ -46,7 +46,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public ITileInfo? SelectedTile { get; set; }
+    public ITileLibraryItem? SelectedTile { get; set; }
     public ITool? SelectedTool { get; set; }
     public List<ITool> Tools { get; } = new() { new BrushTool(), new EraserTool(), new PointerTool() };
     public UndoStack UndoStack { get; } = new();
@@ -54,7 +54,7 @@ public class MainPageViewModel : INotifyPropertyChanged
     public MainPageViewModel()
     {
         SelectedTool = Tools[0];
-        Tiles.SortDescriptions.Add(new SortDescription(nameof(ITileInfo.Name), SortDirection.Ascending));
+        Tiles.SortDescriptions.Add(new SortDescription(nameof(ITileLibraryItem.Id), SortDirection.Ascending));
         Tiles.Filter = TilesFilter;
     }
 
@@ -96,7 +96,7 @@ public class MainPageViewModel : INotifyPropertyChanged
 
     private bool TilesFilter(object o)
     {
-        if (o is not ITileInfo tile)
+        if (o is not ITileLibraryItem tile)
             return false;
         return tile.HexType == MapData?.HexType;
     }

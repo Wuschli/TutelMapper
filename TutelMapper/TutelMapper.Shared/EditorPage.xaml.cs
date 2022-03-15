@@ -19,7 +19,6 @@ using SkiaSharp.Views.UWP;
 using TutelMapper.Annotations;
 using TutelMapper.Data;
 using TutelMapper.Dialogs;
-using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
 // ReSharper disable RedundantExtendsListEntry
@@ -96,11 +95,11 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         try
         {
             await App.TileLibrary.Load();
-            VM.SelectedTile = VM.Tiles.FirstOrDefault() as ITileInfo;
+            VM.SelectedTile = VM.Tiles.FirstOrDefault() as ITileLibraryItem;
         }
         catch (Exception e)
         {
-            var dialog = new MessageDialog(e.Message, "Failed to load");
+            var dialog = new MessageDialog(e.Message, "Failed to load Tilesets");
             await dialog.ShowAsync();
         }
     }
@@ -212,7 +211,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         if (VM.MapData == null)
             return;
 
-        var tileName = layer.Data[column, row];
+        var tileId = layer.Data[column, row];
         var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
         var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
         var rect = new SKRect(pixelCoordinates.X - VM.MapData.HexSize, pixelCoordinates.Y - VM.MapData.HexSize, pixelCoordinates.X + VM.MapData.HexSize, pixelCoordinates.Y + VM.MapData.HexSize);
@@ -222,9 +221,9 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         {
             VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, VM.MapData.HexSize, VM.SelectedTile);
         }
-        else if (!string.IsNullOrEmpty(tileName))
+        else if (!string.IsNullOrEmpty(tileId))
         {
-            var tileInfo = App.TileLibrary.GetTile(tileName);
+            var tileInfo = App.TileLibrary.GetTile(tileId!);
             if (tileInfo != null)
             {
                 var fillRect = rect.AspectFill(new SKSize(VM.MapData.HexSize, VM.MapData.HexSize * tileInfo.AspectRatio));
@@ -234,7 +233,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
             }
             else
             {
-                canvas.DrawText($"Tile not found!\n{tileName}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2f, VM.MapData.HexSize / 2f), paint);
+                canvas.DrawText($"Tile not found!\n{tileId}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2f, VM.MapData.HexSize / 2f), paint);
             }
         }
     }

@@ -48,7 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HexType.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITileInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITileLibraryItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PointerInfo.cs" />
@@ -121,6 +121,12 @@
     </Content>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\tiles.zip" />
+    <None Include="$(MSBuildThisFileDirectory)Tiles\Super Rough RPG Filled.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Tiles\Super Rough RPG.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\Resources.resw" />

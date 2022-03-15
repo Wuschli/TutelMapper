@@ -18,9 +18,9 @@ namespace TutelMapper.Util;
 
 public class TileLibrary
 {
-    private readonly Dictionary<string, ITileInfo> _tileCache = new();
+    private readonly Dictionary<string, ITileLibraryItem> _tileCache = new();
 
-    public ObservableCollection<ITileInfo> Tiles { get; } = new();
+    public ObservableCollection<ITileLibraryItem> Tiles { get; } = new();
     private IFileSystem? FileSystem { get; set; }
 
     private JsonSerializerOptions SerializerOptions { get; } = new()
@@ -60,10 +60,10 @@ public class TileLibrary
         if (FileSystem == null)
             return;
 
-        await LoadTilesRecursive(FileSystem, UPath.Root);
+        await LoadTilesRecursive(FileSystem, UPath.Root, Tiles);
     }
 
-    private async Task LoadTilesRecursive(IFileSystem fileSystem, UPath path)
+    private async Task LoadTilesRecursive(IFileSystem fileSystem, UPath path, ICollection<ITileLibraryItem> parent)
     {
         var manifestPath = path / "manifest.json";
         TilesetManifest? manifest = null;
@@ -73,11 +73,22 @@ public class TileLibrary
             manifest = await JsonSerializer.DeserializeAsync<TilesetManifest>(stream, SerializerOptions);
         }
 
+        var hexType = manifest?.HexType ?? HexType.Flat;
+
+        var collection = parent;
+
+        if (path != UPath.Root)
+        {
+            var tileCollection = new TileCollection(path.GetName(), path.FullName, hexType);
+            parent.Add(tileCollection);
+            collection = tileCollection.Tiles;
+        }
+
         foreach (var item in fileSystem.EnumerateItems(path, SearchOption.TopDirectoryOnly))
         {
             if (item.IsDirectory)
             {
-                await LoadTilesRecursive(fileSystem, item.AbsolutePath);
+                await LoadTilesRecursive(fileSystem, item.AbsolutePath, collection);
                 continue;
             }
 
@@ -85,24 +96,21 @@ public class TileLibrary
                 continue;
 
             var tileName = item.Path.GetFullPathWithoutExtension().ToRelative().FullName;
-            Tiles.Add(new SingleTileInfo
-            {
-                Name = tileName,
-                ImageFile = item,
-                HexType = manifest?.HexType ?? HexType.Flat
-            });
+            var singleTileInfo = new SingleTileInfo(item.Path.GetNameWithoutExtension()!, tileName, hexType, item);
+            collection.Add(singleTileInfo);
+            _tileCache.Add(singleTileInfo.Id, singleTileInfo);
         }
     }
 
 
-    public ITileInfo? GetTile(string tileName)
+    public IDrawableTile? GetTile(string tileName)
     {
         if (_tileCache.TryGetValue(tileName, out var tileInfo))
-            return tileInfo;
+            return tileInfo.GetDrawableTile();
 
-        tileInfo = Tiles.FirstOrDefault(info => info.Name == tileName);
+        tileInfo = Tiles.FirstOrDefault(info => info.Id == tileName);
         if (tileInfo != null)
             _tileCache[tileName] = tileInfo;
-        return tileInfo;
+        return tileInfo?.GetDrawableTile();
     }
 }

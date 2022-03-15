@@ -20,7 +20,6 @@
     <_Globbed_Compile Remove="Tools\PointerTool.cs" />
     <_Globbed_Compile Remove="Util\FocusExtension.cs" />
     <_Globbed_Compile Remove="ViewModels\HexType.cs" />
-    <_Globbed_Compile Remove="ViewModels\ITileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <_Globbled_Page Remove="Dialogs\NewMapDialog.xaml" />

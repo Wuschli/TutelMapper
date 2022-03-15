@@ -15,19 +15,19 @@ public class EraserTool : ITool
     public string Name => "Eraser";
     public string Icon => "\uE75C";
 
-    public async Task Execute(ITileInfo selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public async Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
     {
         if (string.IsNullOrEmpty(target[x, y]))
             return;
         await undoStack.Do(new EraseTileCommand(target, x, y));
     }
 
-    public bool CanPreview(ITileInfo? selectedTile)
+    public bool CanPreview(ITileLibraryItem? selectedTile)
     {
         return true;
     }
 
-    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileInfo? vmSelectedTile)
+    public void DrawPreview(SKCanvas canvas, MapLayer layer, CubeCoordinates cubeCoordinates, SKPoint pixelCoordinates, CubeCoordinates hoveredHex, float hexSize, ITileLibraryItem? selectedTile)
     {
     }
 }
