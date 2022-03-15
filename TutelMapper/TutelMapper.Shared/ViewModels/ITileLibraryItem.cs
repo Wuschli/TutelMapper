@@ -4,12 +4,16 @@ using SkiaSharp;
 
 namespace TutelMapper.ViewModels;
 
-public interface ITileLibraryItem
+public interface ITileSelectionItem
 {
     string DisplayName { get; }
+    ImageSource PreviewImage { get; }
+}
+
+public interface ITileLibraryItem : ITileSelectionItem
+{
     string Id { get; }
     public HexType HexType { get; }
-    ImageSource PreviewImage { get; }
     IDrawableTile GetDrawableTile();
     void WasPlaced();
     bool ContainsId(string? tileId);

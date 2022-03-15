@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Barbar.HexGrid;
 using MessagePack;
 using Microsoft.Toolkit.Uwp.UI;
@@ -29,7 +33,7 @@ public class MainPageViewModel : INotifyPropertyChanged
     public float Zoom { get; set; } = 1f;
     public SKPoint Offset { get; set; }
     public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; private set; }
-    public AdvancedCollectionView Tiles { get; } = new(App.TileLibrary.Tiles, true);
+    public AdvancedCollectionView Tiles { get; } = new();
 
     public MapData? MapData
     {
@@ -42,11 +46,12 @@ public class MainPageViewModel : INotifyPropertyChanged
             if (_mapData != null)
                 _mapData.Layers.CollectionChanged += SetDirty;
             CreateHexGrid();
-            Tiles.RefreshFilter();
+            SetTileSource(App.TileLibrary);
         }
     }
 
-    public ITileLibraryItem? SelectedTile { get; set; }
+    public ITileSelectionItem? TileSelection { get; set; }
+    public ITileLibraryItem? SelectedTile => TileSelection as ITileLibraryItem;
     public ITool? SelectedTool { get; set; }
     public List<ITool> Tools { get; } = new() { new BrushTool(), new EraserTool(), new PointerTool() };
     public UndoStack UndoStack { get; } = new();
@@ -54,8 +59,21 @@ public class MainPageViewModel : INotifyPropertyChanged
     public MainPageViewModel()
     {
         SelectedTool = Tools[0];
-        Tiles.SortDescriptions.Add(new SortDescription(nameof(ITileLibraryItem.Id), SortDirection.Ascending));
         Tiles.Filter = TilesFilter;
+    }
+
+    public async Task LoadTiles()
+    {
+        try
+        {
+            await App.TileLibrary.Load();
+            SetTileSource(App.TileLibrary);
+        }
+        catch (Exception e)
+        {
+            var dialog = new MessageDialog(e.Message, "Failed to load Tilesets");
+            await dialog.ShowAsync();
+        }
     }
 
     public void SetDirty()
@@ -97,7 +115,7 @@ public class MainPageViewModel : INotifyPropertyChanged
     private bool TilesFilter(object o)
     {
         if (o is not ITileLibraryItem tile)
-            return false;
+            return true;
         return tile.HexType == MapData?.HexType;
     }
 
@@ -212,9 +230,44 @@ public class MainPageViewModel : INotifyPropertyChanged
         MapData.AddLayer("New Layer");
     }
 
+    public void DoubleTapTile(object sender, RoutedEventArgs e)
+    {
+        if (TileSelection is ITileSource tileCollection)
+            SetTileSource(tileCollection);
+        else if (TileSelection is BackToParentViewModel back)
+            SetTileSource(back.Parent);
+    }
+
+    private void SetTileSource(ITileSource source)
+    {
+        using (Tiles.DeferRefresh())
+        {
+            Tiles.Clear();
+            if (source.Parent != null)
+                Tiles.Add(new BackToParentViewModel(source.Parent));
+            foreach (var item in source.Tiles.OrderBy(item => item.DisplayName))
+                Tiles.Add(item);
+        }
+
+        Tiles.Refresh();
+        TileSelection = Tiles.OfType<ITileLibraryItem>().FirstOrDefault();
+    }
+
     [NotifyPropertyChangedInvocator]
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+public class BackToParentViewModel : ITileSelectionItem
+{
+    public ITileSource Parent { get; }
+    public string DisplayName => "Back";
+    public ImageSource PreviewImage { get; } = new BitmapImage(new Uri("ms-appx:///Assets/Icons/up.png"));
+
+    public BackToParentViewModel(ITileSource parent)
+    {
+        Parent = parent;
     }
 }

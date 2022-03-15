@@ -9,14 +9,15 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using SkiaSharp;
 using TutelMapper.Annotations;
+using TutelMapper.Util;
 using Zio;
 
 namespace TutelMapper.ViewModels;
 
-public class TileCollection : ITileLibraryItem, INotifyPropertyChanged
+public class TileCollection : ITileLibraryItem, ITileSource, INotifyPropertyChanged
 {
     private readonly Random _random;
-    private int _currentTileIndex = 0;
+    private int _currentTileIndex;
     public event PropertyChangedEventHandler? PropertyChanged;
     public string DisplayName { get; set; }
     public string Id { get; set; }
@@ -24,12 +25,14 @@ public class TileCollection : ITileLibraryItem, INotifyPropertyChanged
     public ImageSource PreviewImage => Tiles.First().PreviewImage;
 
     public ObservableCollection<ITileLibraryItem> Tiles { get; } = new();
+    public ITileSource? Parent { get; }
 
-    public TileCollection(string displayName, string id, HexType hexType)
+    public TileCollection(string displayName, string id, HexType hexType, ITileSource parent)
     {
         DisplayName = displayName;
         Id = id;
         HexType = hexType;
+        Parent = parent;
         _random = new Random(DateTime.UtcNow.Millisecond);
         WasPlaced();
     }

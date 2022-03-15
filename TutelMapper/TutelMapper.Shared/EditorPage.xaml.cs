@@ -49,7 +49,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
     {
         base.OnNavigatedTo(e);
 
-        _ = LoadTiles();
+        _ = VM.LoadTiles();
 
         _pageIsActive = true;
         _ = DrawLoop();
@@ -88,20 +88,6 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
     {
         base.OnNavigatedFrom(e);
         _pageIsActive = false;
-    }
-
-    private async Task LoadTiles()
-    {
-        try
-        {
-            await App.TileLibrary.Load();
-            VM.SelectedTile = VM.Tiles.FirstOrDefault() as ITileLibraryItem;
-        }
-        catch (Exception e)
-        {
-            var dialog = new MessageDialog(e.Message, "Failed to load Tilesets");
-            await dialog.ShowAsync();
-        }
     }
 
     private async Task DrawLoop()

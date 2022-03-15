@@ -111,12 +111,13 @@
                 </GridView>
                 <ScrollViewer Grid.Row="1" Margin="0 20">
                     <GridView ItemsSource="{x:Bind VM.Tiles}"
-                              SelectedItem="{x:Bind VM.SelectedTile, Mode=TwoWay}"
+                              SelectedItem="{x:Bind VM.TileSelection, Mode=TwoWay}"
                               SelectionMode="Single"
                               Margin="20 0"
-                              Padding="0">
+                              Padding="0"
+                              DoubleTapped="VM.DoubleTapTile">
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:ITileLibraryItem">
+                            <DataTemplate x:DataType="viewModels:ITileSelectionItem">
                                 <Image Source="{x:Bind PreviewImage, Mode=OneWay}"
                                        ToolTipService.ToolTip="{x:Bind DisplayName}"
                                        Width="60px"

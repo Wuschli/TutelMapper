@@ -16,11 +16,18 @@ using Zio.FileSystems;
 
 namespace TutelMapper.Util;
 
-public class TileLibrary
+public interface ITileSource
+{
+    public ObservableCollection<ITileLibraryItem> Tiles { get; }
+    public ITileSource? Parent { get; }
+}
+
+public class TileLibrary : ITileSource
 {
     private readonly Dictionary<string, ITileLibraryItem> _tileCache = new();
 
     public ObservableCollection<ITileLibraryItem> Tiles { get; } = new();
+    public ITileSource? Parent => null;
     private IFileSystem? FileSystem { get; set; }
 
     private JsonSerializerOptions SerializerOptions { get; } = new()
@@ -60,10 +67,10 @@ public class TileLibrary
         if (FileSystem == null)
             return;
 
-        await LoadTilesRecursive(FileSystem, UPath.Root, Tiles);
+        await LoadTilesRecursive(FileSystem, UPath.Root, this);
     }
 
-    private async Task LoadTilesRecursive(IFileSystem fileSystem, UPath path, ICollection<ITileLibraryItem> parent)
+    private async Task LoadTilesRecursive(IFileSystem fileSystem, UPath path, ITileSource parent)
     {
         var manifestPath = path / "manifest.json";
         TilesetManifest? manifest = null;
@@ -79,9 +86,9 @@ public class TileLibrary
 
         if (path != UPath.Root)
         {
-            var tileCollection = new TileCollection(path.GetName(), path.FullName, hexType);
-            parent.Add(tileCollection);
-            collection = tileCollection.Tiles;
+            var tileCollection = new TileCollection(path.GetName(), path.FullName, hexType, parent);
+            parent.Tiles.Add(tileCollection);
+            collection = tileCollection;
         }
 
         foreach (var item in fileSystem.EnumerateItems(path, SearchOption.TopDirectoryOnly))
@@ -97,7 +104,7 @@ public class TileLibrary
 
             var tileName = item.Path.GetFullPathWithoutExtension().ToRelative().FullName;
             var singleTileInfo = new SingleTileInfo(item.Path.GetNameWithoutExtension()!, tileName, hexType, item);
-            collection.Add(singleTileInfo);
+            collection.Tiles.Add(singleTileInfo);
             _tileCache.Add(singleTileInfo.Id, singleTileInfo);
         }
     }

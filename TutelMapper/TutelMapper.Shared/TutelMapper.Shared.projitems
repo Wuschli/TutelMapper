@@ -116,6 +116,9 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-400.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up-scale-200.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up.scale-300.png" />
     <Content Include="$(MSBuildThisFileDirectory)Tiles\manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
