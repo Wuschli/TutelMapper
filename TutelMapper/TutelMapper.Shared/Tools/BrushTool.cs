@@ -15,11 +15,14 @@ public class BrushTool : ITool
     public string Name => "Brush";
     public string Icon => "\uED63";
 
-    public async Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public async Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack, bool isDrag)
     {
-        if (target[x, y] == selectedTile.Id)
+        if (isDrag && selectedTile.ContainsId(target[x, y]))
             return;
-        await undoStack.Do(new PlaceTileCommand(target, x, y, selectedTile.GetDrawableTile()));
+        var drawable = selectedTile.GetDrawableTile();
+        if (drawable.Id == target[x, y])
+            return;
+        await undoStack.Do(new PlaceTileCommand(target, x, y, drawable));
         selectedTile.WasPlaced();
     }
 

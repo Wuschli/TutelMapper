@@ -352,7 +352,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         var layer = VM.MapData.Layers[VM.MapData.SelectedLayerIndex];
         if (offsetCoordinates.Row >= 0 && offsetCoordinates.Column >= 0 && offsetCoordinates.Column < layer.Data.GetLength(0) && offsetCoordinates.Row < layer.Data.GetLength(1))
         {
-            VM.SelectedTool.Execute(VM.SelectedTile, layer.Data, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack)
+            VM.SelectedTool.Execute(VM.SelectedTile, layer.Data, offsetCoordinates.Column, offsetCoordinates.Row, VM.UndoStack, isDrag)
                 .ContinueWith(_ => VM.SetDirty());
         }
     }

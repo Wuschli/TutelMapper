@@ -15,7 +15,7 @@ public class EraserTool : ITool
     public string Name => "Eraser";
     public string Icon => "\uE75C";
 
-    public async Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public async Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack, bool isDrag)
     {
         if (string.IsNullOrEmpty(target[x, y]))
             return;

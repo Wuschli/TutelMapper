@@ -43,6 +43,11 @@ public class TileCollection : ITileLibraryItem, INotifyPropertyChanged
     {
         _currentTileIndex = _random.Next(Tiles.Count);
     }
+
+    public bool ContainsId(string? tileId)
+    {
+        return tileId != null && Tiles.Any(item => item.ContainsId(tileId));
+    }
 }
 
 public class SingleTileInfo : ITileLibraryItem, INotifyPropertyChanged
@@ -85,6 +90,11 @@ public class SingleTileInfo : ITileLibraryItem, INotifyPropertyChanged
 
     public void WasPlaced()
     {
+    }
+
+    public bool ContainsId(string? tileId)
+    {
+        return Id == tileId;
     }
 
     private async void SetImageSourceAsync()

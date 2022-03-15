@@ -12,6 +12,7 @@ public interface ITileLibraryItem
     ImageSource PreviewImage { get; }
     IDrawableTile GetDrawableTile();
     void WasPlaced();
+    bool ContainsId(string? tileId);
 }
 
 public interface IDrawableTile

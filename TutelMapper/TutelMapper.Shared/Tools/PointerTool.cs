@@ -14,7 +14,7 @@ public class PointerTool : ITool
     public string Name => "Pointer";
     public string Icon => "\uF271";
 
-    public Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack)
+    public Task Execute(ITileLibraryItem selectedTile, string?[,] target, int x, int y, UndoStack undoStack, bool isDrag)
     {
         return Task.CompletedTask;
     }
