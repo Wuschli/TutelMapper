@@ -11,11 +11,10 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Barbar.HexGrid;
 using MessagePack;
 using Microsoft.Toolkit.Uwp.UI;
+using PropertyChanged;
 using SkiaSharp;
 using TutelMapper.Annotations;
 using TutelMapper.Data;
@@ -27,9 +26,12 @@ namespace TutelMapper.ViewModels;
 public class MainPageViewModel : INotifyPropertyChanged
 {
     private MapData? _mapData;
+    private ITileSelectionItem? _tileSelection;
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    [DoNotNotify]
     public bool SomethingChanged { get; set; }
+
     public float Zoom { get; set; } = 1f;
     public SKPoint Offset { get; set; }
     public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; private set; }
@@ -50,8 +52,24 @@ public class MainPageViewModel : INotifyPropertyChanged
         }
     }
 
-    public ITileSelectionItem? TileSelection { get; set; }
+    public ITileSelectionItem? TileSelection
+    {
+        get => _tileSelection;
+        set
+        {
+            if (value is BackToParentViewModel back)
+            {
+                SetTileSource(back.Parent);
+                return;
+            }
+
+            _tileSelection = value;
+        }
+    }
+
+    [DependsOn(nameof(TileSelection))]
     public ITileLibraryItem? SelectedTile => TileSelection as ITileLibraryItem;
+
     public ITool? SelectedTool { get; set; }
     public List<ITool> Tools { get; } = new() { new BrushTool(), new EraserTool(), new PointerTool() };
     public UndoStack UndoStack { get; } = new();
@@ -257,17 +275,5 @@ public class MainPageViewModel : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-}
-
-public class BackToParentViewModel : ITileSelectionItem
-{
-    public ITileSource Parent { get; }
-    public string DisplayName => "Back";
-    public ImageSource PreviewImage { get; } = new BitmapImage(new Uri("ms-appx:///Assets/Icons/up.png"));
-
-    public BackToParentViewModel(ITileSource parent)
-    {
-        Parent = parent;
     }
 }

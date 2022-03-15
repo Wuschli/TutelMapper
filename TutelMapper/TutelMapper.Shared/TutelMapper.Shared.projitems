@@ -47,6 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\ZipHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BackToParentViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HexType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITileLibraryItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
@@ -116,9 +117,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-400.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-100.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up.scale-100.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up-scale-200.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up.scale-300.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\up.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\back.png" />
     <Content Include="$(MSBuildThisFileDirectory)Tiles\manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
