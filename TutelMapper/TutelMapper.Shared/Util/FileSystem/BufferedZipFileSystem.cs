@@ -53,7 +53,8 @@ public class BufferedZipFileSystem : Zio.FileSystems.FileSystem
 
     protected override bool FileExistsImpl(UPath path)
     {
-        throw new NotImplementedException();
+        using var stream = _buffer.AsStream();
+        return ZipHelper.FileExists(stream, path.FullName.TrimStart('/'));
     }
 
     protected override void MoveFileImpl(UPath srcPath, UPath destPath)

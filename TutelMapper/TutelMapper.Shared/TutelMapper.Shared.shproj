@@ -14,6 +14,7 @@
     <_Globbed_Compile Remove="Commands\EraseTileCommand.cs" />
     <_Globbed_Compile Remove="Data\MapData.cs" />
     <_Globbed_Compile Remove="Data\MapDataExtensions.cs" />
+    <_Globbed_Compile Remove="Data\TilesetManifest.cs" />
     <_Globbed_Compile Remove="Dialogs\NewMapDialog.xaml.cs" />
     <_Globbed_Compile Remove="Tools\EraserTool.cs" />
     <_Globbed_Compile Remove="Tools\PointerTool.cs" />

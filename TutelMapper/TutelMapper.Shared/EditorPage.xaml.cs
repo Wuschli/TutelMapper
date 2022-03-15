@@ -36,7 +36,6 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
     public uint? DraggingPointer { get; private set; }
     public uint? PaintingPointer { get; private set; }
     public ObservableCollection<PointerInfo> Pointers { get; } = new();
-    public TileLibrary TileLibrary => App.TileLibrary;
 
     public EditorPage()
     {
@@ -97,7 +96,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         try
         {
             await App.TileLibrary.Load();
-            VM.SelectedTile = App.TileLibrary.Tiles.FirstOrDefault();
+            VM.SelectedTile = VM.Tiles.FirstOrDefault() as ITileInfo;
         }
         catch (Exception e)
         {

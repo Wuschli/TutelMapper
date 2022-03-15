@@ -55,4 +55,26 @@ public static class ZipHelper
 
         throw new FileNotFoundException();
     }
+
+    public static bool FileExists(FileSystemItem zipFile, string relativePathInsideZip)
+    {
+        using var stream = zipFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+        return FileExists(stream, relativePathInsideZip);
+    }
+
+    public static bool FileExists(Stream stream, string relativePathInsideZip)
+    {
+        using var zipStream = new ZipInputStream(stream);
+        ZipEntry entry;
+
+        while ((entry = zipStream.GetNextEntry()) != null)
+        {
+            if (entry.IsDirectory)
+                continue;
+            if (entry.Name == relativePathInsideZip)
+                return true;
+        }
+
+        return false;
+    }
 }

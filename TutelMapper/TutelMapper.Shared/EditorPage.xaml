@@ -110,7 +110,7 @@
                     </GridView.ItemTemplate>
                 </GridView>
                 <ScrollViewer Grid.Row="1" Margin="0 20">
-                    <GridView ItemsSource="{x:Bind TileLibrary.Tiles}"
+                    <GridView ItemsSource="{x:Bind VM.Tiles}"
                               SelectedItem="{x:Bind VM.SelectedTile, Mode=TwoWay}"
                               SelectionMode="Single"
                               Margin="20 0"

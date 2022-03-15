@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Converters\HistoryIsAppliedConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MapDataExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TilesetManifest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Dialogs\NewMapDialog.xaml.cs">
       <DependentUpon>NewMapDialog.xaml</DependentUpon>
     </Compile>
@@ -115,6 +116,9 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-400.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-200.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Icons\GitHub.scale-100.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Tiles\manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="$(MSBuildThisFileDirectory)Assets\SharedAssets.md" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\tiles.zip" />
   </ItemGroup>

@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Storage;
+using TutelMapper.Data;
 using TutelMapper.Util.FileSystem;
 using TutelMapper.ViewModels;
 using Zio;
@@ -19,6 +22,12 @@ public class TileLibrary
 
     public ObservableCollection<ITileInfo> Tiles { get; } = new();
     private IFileSystem? FileSystem { get; set; }
+
+    private JsonSerializerOptions SerializerOptions { get; } = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
 
     private async Task InitializeFileSystem()
     {
@@ -51,19 +60,40 @@ public class TileLibrary
         if (FileSystem == null)
             return;
 
-        foreach (var item in FileSystem.EnumerateItems(UPath.Root, SearchOption.AllDirectories).OrderBy(item => item.FullName))
+        await LoadTilesRecursive(FileSystem, UPath.Root);
+    }
+
+    private async Task LoadTilesRecursive(IFileSystem fileSystem, UPath path)
+    {
+        var manifestPath = path / "manifest.json";
+        TilesetManifest? manifest = null;
+        if (fileSystem.FileExists(manifestPath))
         {
-            if (item.IsDirectory || item.Path.GetExtensionWithDot() != ".png")
+            using var stream = fileSystem.OpenFile(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            manifest = await JsonSerializer.DeserializeAsync<TilesetManifest>(stream, SerializerOptions);
+        }
+
+        foreach (var item in fileSystem.EnumerateItems(path, SearchOption.TopDirectoryOnly))
+        {
+            if (item.IsDirectory)
+            {
+                await LoadTilesRecursive(fileSystem, item.AbsolutePath);
+                continue;
+            }
+
+            if (item.Path.GetExtensionWithDot() != ".png")
                 continue;
 
             var tileName = item.Path.GetFullPathWithoutExtension().ToRelative().FullName;
             Tiles.Add(new SingleTileInfo
             {
                 Name = tileName,
-                ImageFile = item
+                ImageFile = item,
+                HexType = manifest?.HexType ?? HexType.Flat
             });
         }
     }
+
 
     public ITileInfo? GetTile(string tileName)
     {

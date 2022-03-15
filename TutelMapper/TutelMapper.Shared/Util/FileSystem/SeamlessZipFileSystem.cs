@@ -51,7 +51,16 @@ public class SeamlessZipFileSystem : Zio.FileSystems.FileSystem
 
     protected override bool FileExistsImpl(UPath path)
     {
-        throw new NotImplementedException();
+        if (_fileSystem.FileExists(path))
+            return true;
+
+        var zipFile = GetZipFileForPath(path);
+        if (zipFile == null)
+            return false;
+
+        var relativePathInsideZip = path.FullName.Substring(zipFile.Value.Path.GetFullPathWithoutExtension().FullName.Length);
+
+        return ZipHelper.FileExists(zipFile.Value, relativePathInsideZip.TrimStart('/'));
     }
 
     protected override void MoveFileImpl(UPath srcPath, UPath destPath)

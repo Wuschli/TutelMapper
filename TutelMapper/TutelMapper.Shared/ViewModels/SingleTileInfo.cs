@@ -17,6 +17,7 @@ public class SingleTileInfo : ITileInfo, INotifyPropertyChanged
     private SKImage? _skiaImage;
     private BitmapImage? _imageSource;
     public string? Name { get; set; }
+    public HexType HexType { get; set; }
     public FileSystemItem ImageFile { get; set; }
 
     public ImageSource ImageSource

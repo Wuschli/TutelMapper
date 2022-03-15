@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -12,6 +11,7 @@ using Windows.Storage.AccessCache;
 using Windows.UI.Popups;
 using Barbar.HexGrid;
 using MessagePack;
+using Microsoft.Toolkit.Uwp.UI;
 using SkiaSharp;
 using TutelMapper.Annotations;
 using TutelMapper.Data;
@@ -28,7 +28,8 @@ public class MainPageViewModel : INotifyPropertyChanged
     public bool SomethingChanged { get; set; }
     public float Zoom { get; set; } = 1f;
     public SKPoint Offset { get; set; }
-    public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; set; }
+    public HexLayout<SKPoint, SkPointPolicy> HexGrid { get; private set; }
+    public AdvancedCollectionView Tiles { get; } = new(App.TileLibrary.Tiles, true);
 
     public MapData? MapData
     {
@@ -40,6 +41,8 @@ public class MainPageViewModel : INotifyPropertyChanged
             _mapData = value;
             if (_mapData != null)
                 _mapData.Layers.CollectionChanged += SetDirty;
+            CreateHexGrid();
+            Tiles.RefreshFilter();
         }
     }
 
@@ -51,6 +54,8 @@ public class MainPageViewModel : INotifyPropertyChanged
     public MainPageViewModel()
     {
         SelectedTool = Tools[0];
+        Tiles.SortDescriptions.Add(new SortDescription(nameof(ITileInfo.Name), SortDirection.Ascending));
+        Tiles.Filter = TilesFilter;
     }
 
     public void SetDirty()
@@ -71,22 +76,36 @@ public class MainPageViewModel : INotifyPropertyChanged
         MapData.SelectedLayerIndex = 0;
         Zoom = 1f;
         Offset = new SKPoint(96f, 160f);
-        switch (hexType)
+    }
+
+    private void CreateHexGrid()
+    {
+        if (MapData == null)
+            return;
+
+        switch (MapData.HexType)
         {
             case HexType.Flat:
-                HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(hexSize, hexSize), new SKPoint(0, 0), Barbar.HexGrid.Offset.Even);
+                HexGrid = HexLayoutFactory.CreateFlatHexLayout<SKPoint, SkPointPolicy>(new SKPoint(MapData.HexSize, MapData.HexSize), new SKPoint(0, 0), Barbar.HexGrid.Offset.Even);
                 break;
             case HexType.Pointy:
-                HexGrid = HexLayoutFactory.CreatePointyHexLayout<SKPoint, SkPointPolicy>(new SKPoint(hexSize, hexSize), new SKPoint(0, 0), Barbar.HexGrid.Offset.Even);
+                HexGrid = HexLayoutFactory.CreatePointyHexLayout<SKPoint, SkPointPolicy>(new SKPoint(MapData.HexSize, MapData.HexSize), new SKPoint(0, 0), Barbar.HexGrid.Offset.Even);
                 break;
         }
+    }
+
+    private bool TilesFilter(object o)
+    {
+        if (o is not ITileInfo tile)
+            return false;
+        return tile.HexType == MapData?.HexType;
     }
 
     public async Task OpenMap()
     {
         try
         {
-            var openPicker = new Windows.Storage.Pickers.FileOpenPicker()
+            var openPicker = new Windows.Storage.Pickers.FileOpenPicker
             {
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
             };

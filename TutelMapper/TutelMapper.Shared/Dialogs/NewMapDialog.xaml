@@ -14,7 +14,8 @@
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     CloseButtonClick="ContentDialog_CloseButtonClick">
 
-    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                Spacing="25">
         <muxc:NumberBox Value="{x:Bind Path=MapWidth, Mode=TwoWay}"
                         Header="Width"
                         SpinButtonPlacementMode="Inline" />
