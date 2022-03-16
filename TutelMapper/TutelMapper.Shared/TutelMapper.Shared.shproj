@@ -20,6 +20,7 @@
     <_Globbed_Compile Remove="Tools\PointerTool.cs" />
     <_Globbed_Compile Remove="Util\FocusExtension.cs" />
     <_Globbed_Compile Remove="ViewModels\BackToParentViewModel.cs" />
+    <_Globbed_Compile Remove="ViewModels\DrawableTile.cs" />
     <_Globbed_Compile Remove="ViewModels\HexType.cs" />
   </ItemGroup>
   <ItemGroup>

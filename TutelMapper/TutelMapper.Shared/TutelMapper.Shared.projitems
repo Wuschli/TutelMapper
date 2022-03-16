@@ -48,12 +48,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\TileLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UndoStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\BackToParentViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\DrawableTile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\HexType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ITileLibraryItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SkPointPolicy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\PointerInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SingleTileInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TileCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Converters\_Converters.xaml">
