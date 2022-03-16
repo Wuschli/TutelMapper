@@ -165,6 +165,7 @@ public class MainPageViewModel : INotifyPropertyChanged
                 stream.Close();
 
                 Offset = MapData.DefaultOffset;
+                Zoom = 1;
             }
         }
         catch (Exception e)
