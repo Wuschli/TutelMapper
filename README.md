@@ -11,3 +11,6 @@ An easy hex map editor with touch in mind
 
 ## Screenshots
 ![Screenshot1](/screenshots/Screenshot-2022-03-16-134421.png)
+
+## Support
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S5BMV84)
