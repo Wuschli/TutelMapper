@@ -41,6 +41,11 @@ public class SingleTileInfo : ITileLibraryItem, INotifyPropertyChanged
         _drawableTile = new DrawableTile(DisplayName, id, imageFile);
     }
 
+    public Stream GetPreviewImageStream()
+    {
+        return _imageFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+    }
+
     public IDrawableTile GetDrawableTile()
     {
         return _drawableTile;
@@ -57,7 +62,7 @@ public class SingleTileInfo : ITileLibraryItem, INotifyPropertyChanged
 
     private async void SetImageSourceAsync()
     {
-        using var fileStream = _imageFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var fileStream = GetPreviewImageStream();
         using var stream = fileStream.AsRandomAccessStream();
         stream.Seek(0);
         await _imageSource?.SetSourceAsync(stream);
