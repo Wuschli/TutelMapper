@@ -7,7 +7,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using SixLabors.Fonts;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using TutelMapper.Util;
@@ -81,12 +83,19 @@ public class TileCollection : ITileLibraryItem, ITileSource, INotifyPropertyChan
         // Create Collection Preview Image from 3 child Tiles using ImageSharp
         image.Mutate(x =>
         {
-            for (int i = 0; i < 3; i++)
+            if (Tiles.Any())
             {
-                using var stream = Tiles[i % Tiles.Count].GetPreviewImageStream();
-                var subImage = Image.Load(stream);
-                subImage.Mutate(y => y.Resize(200, 200));
-                x.DrawImage(subImage, new Point(10 + i * 20, 10 + i * 20), PixelColorBlendingMode.Normal, PixelAlphaCompositionMode.SrcOver, 1);
+                for (int i = 2; i >= 0; i--)
+                {
+                    using var stream = Tiles[i % Tiles.Count].GetPreviewImageStream();
+                    var subImage = Image.Load(stream);
+                    subImage.Mutate(y => y.Resize(200, 200));
+                    x.DrawImage(subImage, new Point(10 + i * 20, 10 + i * 20), PixelColorBlendingMode.Normal, PixelAlphaCompositionMode.SrcOver, 1);
+                }
+            }
+            else
+            {
+                x.Fill(Color.Magenta);
             }
         });
 

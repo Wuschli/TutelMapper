@@ -209,13 +209,13 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         }
         else if (!string.IsNullOrEmpty(tileId))
         {
-            var tileInfo = App.TileLibrary.GetTile(tileId!);
-            if (tileInfo != null)
+            var drawableTile = App.TileLibrary.GetTile(tileId!);
+            if (drawableTile != null)
             {
-                var fillRect = rect.AspectFill(new SKSize(VM.MapData.HexSize, VM.MapData.HexSize * tileInfo.AspectRatio));
-                var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + VM.MapData.HexSize);
-                fillRect.Location -= new SKPoint(0, verticalOffset);
-                canvas.DrawImage(tileInfo.SkiaImage, fillRect);
+                var fillRect = rect.AspectFill(new SKSize(VM.MapData.HexSize, VM.MapData.HexSize * drawableTile.AspectRatio));
+                var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + VM.MapData.HexSize) + drawableTile.Offset.Y;
+                fillRect.Location -= new SKPoint(drawableTile.Offset.X, verticalOffset);
+                canvas.DrawImage(drawableTile.SkiaImage, fillRect);
             }
             else
             {

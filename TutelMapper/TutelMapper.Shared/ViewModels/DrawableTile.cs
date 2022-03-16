@@ -28,6 +28,7 @@ public class DrawableTile : IDrawableTile
     }
 
     public float AspectRatio => SkiaImage.Height / (float)SkiaImage.Width;
+    public SKPoint Offset { get; set; }
 
     public DrawableTile(string displayName, string id, FileSystemItem imageFile)
     {

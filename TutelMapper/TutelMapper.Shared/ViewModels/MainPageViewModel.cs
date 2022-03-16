@@ -132,9 +132,11 @@ public class MainPageViewModel : INotifyPropertyChanged
 
     private bool TilesFilter(object o)
     {
-        if (o is not ITileLibraryItem tile)
-            return true;
-        return tile.HexType == MapData?.HexType;
+        if (o is TileCollection collection)
+            return collection.HexType == MapData?.HexType && collection.Tiles.Any();
+        if (o is ITileLibraryItem tile)
+            return tile.HexType == MapData?.HexType;
+        return true;
     }
 
     public async Task OpenMap()

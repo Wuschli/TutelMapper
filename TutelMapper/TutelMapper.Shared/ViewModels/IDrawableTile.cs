@@ -8,4 +8,5 @@ public interface IDrawableTile
     string Id { get; }
     SKImage SkiaImage { get; }
     float AspectRatio { get; }
+    SKPoint Offset { get; }
 }

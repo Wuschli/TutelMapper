@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using SkiaSharp;
 using Zio;
 
 namespace TutelMapper.ViewModels;
@@ -32,13 +33,16 @@ public class SingleTileInfo : ITileLibraryItem, INotifyPropertyChanged
         }
     }
 
-    public SingleTileInfo(string displayName, string id, HexType hexType, FileSystemItem imageFile)
+    public SingleTileInfo(string displayName, string id, HexType hexType, FileSystemItem imageFile, SKPoint offset)
     {
         DisplayName = displayName;
         Id = id;
         HexType = hexType;
         _imageFile = imageFile;
-        _drawableTile = new DrawableTile(DisplayName, id, imageFile);
+        _drawableTile = new DrawableTile(DisplayName, id, imageFile)
+        {
+            Offset = offset
+        };
     }
 
     public Stream GetPreviewImageStream()

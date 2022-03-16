@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Storage;
+using SkiaSharp;
 using TutelMapper.Data;
 using TutelMapper.Util.FileSystem;
 using TutelMapper.ViewModels;
@@ -95,7 +96,7 @@ public class TileLibrary : ITileSource
         {
             if (item.IsDirectory)
             {
-                await LoadTilesRecursive(fileSystem, item.AbsolutePath, collection);
+                await LoadTilesRecursive(fileSystem, item.Path, collection);
                 continue;
             }
 
@@ -103,7 +104,7 @@ public class TileLibrary : ITileSource
                 continue;
 
             var tileName = item.Path.GetFullPathWithoutExtension().ToRelative().FullName;
-            var singleTileInfo = new SingleTileInfo(item.Path.GetNameWithoutExtension()!, tileName, hexType, item);
+            var singleTileInfo = new SingleTileInfo(item.Path.GetNameWithoutExtension()!, tileName, hexType, item, new SKPoint(manifest?.OffsetX ?? 0, manifest?.OffsetY ?? 0));
             collection.Tiles.Add(singleTileInfo);
             _tileCache.Add(singleTileInfo.Id, singleTileInfo);
         }

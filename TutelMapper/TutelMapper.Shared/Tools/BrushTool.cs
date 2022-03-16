@@ -41,8 +41,8 @@ public class BrushTool : ITool
             return;
         var rect = new SKRect(pixelCoordinates.X - hexSize, pixelCoordinates.Y - hexSize, pixelCoordinates.X + hexSize, pixelCoordinates.Y + hexSize);
         var fillRect = rect.AspectFill(new SKSize(hexSize, hexSize * drawableTile.AspectRatio));
-        var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + hexSize);
-        fillRect.Location -= new SKPoint(0, verticalOffset);
+        var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + hexSize) + drawableTile.Offset.Y;
+        fillRect.Location -= new SKPoint(drawableTile.Offset.X, verticalOffset);
         canvas.DrawImage(drawableTile.SkiaImage, fillRect);
     }
 }
