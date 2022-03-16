@@ -40,10 +40,14 @@
                               Height="48px" />
             </CommandBar.Content>
 
-            <AppBarButton
-                Click="{x:Bind OpenGitHub}"
+            <AppBarButton Click="{x:Bind OpenGitHub}"
                 ToolTipService.ToolTip="Browse Source">
                 <Image Source="ms-appx:///Assets/Icons/GitHub.png"></Image>
+            </AppBarButton>
+
+            <AppBarButton Icon="Share"
+                          Click="{x:Bind Export}"
+                          ToolTipService.ToolTip="Export">
             </AppBarButton>
 
             <AppBarButton Icon="Page2"

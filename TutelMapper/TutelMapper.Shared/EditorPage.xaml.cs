@@ -1,7 +1,9 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ using SkiaSharp.Views.UWP;
 using TutelMapper.Annotations;
 using TutelMapper.Data;
 using TutelMapper.Dialogs;
+using TutelMapper.Util;
 using TutelMapper.ViewModels;
 
 // ReSharper disable RedundantExtendsListEntry
@@ -120,107 +123,15 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
             // make sure the canvas is blank
             canvas.Clear(SKColors.Gray);
-
             if (VM.MapData == null)
                 return;
 
-            // draw some text
-            var paint = new SKPaint
-            {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                TextAlign = SKTextAlign.Center,
-                TextSize = 12
-            };
-
-            var gridPaint = new SKPaint
-            {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Stroke
-            };
-
-            canvas.Translate(VM.Offset);
-            canvas.Scale(VM.Zoom);
-
-            // draw hex grid
-            var pointerInfo = Pointers.FirstOrDefault();
-            var hoveredHex = new CubeCoordinates(-1, -1, -1);
-            if (pointerInfo != null && pointerInfo.Type != PointerDeviceType.Touch)
-            {
-                var adjustedCursorPosition = new SKPoint((pointerInfo.Position.X - VM.Offset.X) / VM.Zoom, (pointerInfo.Position.Y - VM.Offset.Y) / VM.Zoom);
-                hoveredHex = VM.HexGrid.PixelToHex(adjustedCursorPosition).Round();
-            }
-
-            for (int column = 0; column < VM.MapData.Width; column++)
-            for (int row = 0; row < VM.MapData.Height; row++)
-            {
-                var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
-                var vertices = VM.HexGrid.PolygonCorners(cubeCoordinates);
-                var path = new SKPath();
-                path.AddPoly(vertices.ToArray());
-                canvas.DrawPath(path, gridPaint);
-            }
-
-            // draw map data
-            for (var layerIndex = VM.MapData.Layers.Count - 1; layerIndex >= 0; layerIndex--)
-            {
-                var layer = VM.MapData.Layers[layerIndex];
-                if (!layer.IsVisible)
-                    continue;
-                for (int row = 0; row < layer.Data.GetLength(1); row++)
-                {
-                    //draw odd tiles in row
-                    for (int column = 1; column < layer.Data.GetLength(0); column += 2)
-                    {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
-                    }
-
-                    //draw even tiles in row
-                    for (int column = 0; column < layer.Data.GetLength(0); column += 2)
-                    {
-                        DrawTile(layer, column, row, hoveredHex, canvas, paint, layerIndex == VM.MapData.SelectedLayerIndex);
-                    }
-                }
-            }
+            MapDataRenderer.DrawMapData(VM.MapData, VM.HexGrid, canvas, VM.Offset, VM.Zoom, Pointers, VM.SelectedTool, VM.SelectedTile);
         }
         catch (Exception ex)
         {
             var dialog = new MessageDialog(ex.Message, "Something went wrong :(");
             _ = dialog.ShowAsync();
-        }
-    }
-
-    private void DrawTile(MapLayer layer, int column, int row, CubeCoordinates hoveredHex, SKCanvas canvas, SKPaint paint, bool isActiveLayer)
-    {
-        if (VM.MapData == null)
-            return;
-
-        var tileId = layer.Data[column, row];
-        var cubeCoordinates = VM.HexGrid.ToCubeCoordinates(new OffsetCoordinates(column, row));
-        var pixelCoordinates = VM.HexGrid.HexToPixel(cubeCoordinates);
-        var rect = new SKRect(pixelCoordinates.X - VM.MapData.HexSize, pixelCoordinates.Y - VM.MapData.HexSize, pixelCoordinates.X + VM.MapData.HexSize, pixelCoordinates.Y + VM.MapData.HexSize);
-        var hovered = hoveredHex.S == cubeCoordinates.S && hoveredHex.Q == cubeCoordinates.Q && hoveredHex.R == cubeCoordinates.R;
-
-        if (isActiveLayer && hovered && VM.SelectedTool != null && VM.SelectedTool.CanPreview(VM.SelectedTile))
-        {
-            VM.SelectedTool.DrawPreview(canvas, layer, cubeCoordinates, pixelCoordinates, hoveredHex, VM.MapData.HexSize, VM.SelectedTile);
-        }
-        else if (!string.IsNullOrEmpty(tileId))
-        {
-            var drawableTile = App.TileLibrary.GetTile(tileId!);
-            if (drawableTile != null)
-            {
-                var fillRect = rect.AspectFill(new SKSize(VM.MapData.HexSize, VM.MapData.HexSize * drawableTile.AspectRatio));
-                var verticalOffset = fillRect.Bottom - (pixelCoordinates.Y + VM.MapData.HexSize) + drawableTile.Offset.Y;
-                fillRect.Location -= new SKPoint(drawableTile.Offset.X, verticalOffset);
-                canvas.DrawImage(drawableTile.SkiaImage, fillRect);
-            }
-            else
-            {
-                canvas.DrawText($"Tile not found!\n{tileId}", pixelCoordinates - new SKPoint(VM.MapData.HexSize / 2f, VM.MapData.HexSize / 2f), paint);
-            }
         }
     }
 
@@ -370,6 +281,33 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
     {
         var dialog = new NewMapDialog(VM);
         await dialog.ShowAsync();
+    }
+
+    public async Task Export()
+    {
+        if (VM.MapData == null)
+            return;
+        var canvasWidth = VM.MapData.PixelWidth + VM.MapData.HexPixelWidth * 2; // 2 Hexes Padding
+        var canvasHeight = VM.MapData.PixelHeight + VM.MapData.HexPixelHeight * 2; // 2 Hexes Padding
+        var bitmap = new SKBitmap((int)canvasWidth, (int)canvasHeight);
+        using var canvas = new SKCanvas(bitmap);
+        var offset = VM.MapData.DefaultOffset + new SKPoint(VM.MapData.HexPixelWidth, VM.MapData.HexPixelHeight); // 1 Hex extra offset for Padding
+        MapDataRenderer.DrawMapData(VM.MapData, VM.HexGrid, canvas, offset, 1, null, null, null);
+
+        var savePicker = new Windows.Storage.Pickers.FileSavePicker
+        {
+            SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+        };
+        // Dropdown of file types the user can save the file as
+        savePicker.FileTypeChoices.Add("png image", new List<string> { ".png" });
+        // Default file name if the user does not type one in or select a file to replace
+        savePicker.SuggestedFileName = "Exported Map";
+        var file = await savePicker.PickSaveFileAsync();
+        if (file != null)
+        {
+            using var stream = await file.OpenStreamForWriteAsync();
+            bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+        }
     }
 
     public async Task OpenGitHub()

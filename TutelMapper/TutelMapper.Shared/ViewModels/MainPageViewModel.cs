@@ -111,7 +111,7 @@ public class MainPageViewModel : INotifyPropertyChanged
         MapData.AddLayer("Layer 1");
         MapData.SelectedLayerIndex = 0;
         Zoom = 1f;
-        Offset = new SKPoint(96f, 160f);
+        Offset = MapData.DefaultOffset;
     }
 
     private void CreateHexGrid()
@@ -163,6 +163,8 @@ public class MainPageViewModel : INotifyPropertyChanged
 #endif
                 UndoStack.Clear();
                 stream.Close();
+
+                Offset = MapData.DefaultOffset;
             }
         }
         catch (Exception e)
