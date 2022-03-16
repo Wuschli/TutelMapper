@@ -9,6 +9,9 @@ An easy hex map editor with touch in mind
 * Mouse, Touch and Pen Input
 * Windows and Browser Support with Android, IOS, MacOS and Linux Support prepared
 
+## Thanks
+Thanks to __CuddlyClover__ for the included default Hex Tiles: [Fantasy Hex Tiles](https://cuddlyclover.itch.io/fantasy-hex-tiles)
+
 ## Screenshots
 ![Screenshot1](/screenshots/Screenshot-2022-03-16-134421.png)
 
