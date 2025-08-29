@@ -41,7 +41,7 @@
             </CommandBar.Content>
 
             <AppBarButton Click="{x:Bind OpenGitHub}"
-                ToolTipService.ToolTip="Browse Source">
+                          ToolTipService.ToolTip="Browse Source">
                 <Image Source="ms-appx:///Assets/Icons/GitHub.png"></Image>
             </AppBarButton>
 
@@ -100,7 +100,7 @@
                 <GridView ItemsSource="{x:Bind VM.Tools}"
                           SelectedItem="{x:Bind VM.SelectedTool, Mode=TwoWay}"
                           SelectionMode="Single"
-                          ItemContainerStyle="{StaticResource ToolSelectionItemContainerStyle}" 
+                          ItemContainerStyle="{StaticResource ToolSelectionItemContainerStyle}"
                           Margin="20 0"
                           Padding="0">
                     <GridView.ItemTemplate>
@@ -119,7 +119,7 @@
                               SelectionMode="Single"
                               Margin="20 0"
                               Padding="0"
-                              DoubleTapped="VM.DoubleTapTile">
+                              DoubleTapped="{x:Bind VM.DoubleTapTile}">
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="viewModels:ITileSelectionItem">
                                 <Image Source="{x:Bind PreviewImage, Mode=OneWay}"
@@ -139,12 +139,13 @@
                     <RowDefinition Height="300" MinHeight="200" />
                 </Grid.RowDefinitions>
                 <ScrollViewer Grid.Row="0">
-                    <ListView Style="{StaticResource NoAnimationListView}"
-                              ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
-                              SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
-                              CanReorderItems="True"
-                              AllowDrop="True"
-                              DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
+                    <ListView
+                        Style="{StaticResource NoAnimationListView}"
+                        ItemsSource="{x:Bind VM.MapData.Layers, Mode=OneWay}"
+                        SelectedIndex="{x:Bind VM.MapData.SelectedLayerIndex, Mode=TwoWay}"
+                        CanReorderItems="True"
+                        AllowDrop="True"
+                        DoubleTapped="{x:Bind VM.MapData.EnableEditing}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="data:MapLayer">
                                 <Grid HorizontalAlignment="Stretch"
@@ -256,7 +257,7 @@
                     </controls:GridSplitter.Element>
                 </controls:GridSplitter>
             </Grid>
-            <skia:SKXamlCanvas Grid.Column="1" x:Name="Canvas"
+            <skia:SKXamlCanvas Grid.Column="1" x:Name="MapCanvas"
                                PaintSurface="OnPaintSurface"
                                PointerMoved="OnPointerMoved"
                                PointerPressed="OnPointerPressed"

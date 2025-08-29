@@ -4,13 +4,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 using TutelMapper.Util;
 
 namespace TutelMapper.ViewModels;
@@ -19,7 +15,7 @@ public class TileCollection : ITileLibraryItem, ITileSource, INotifyPropertyChan
 {
     private const int PreviewImageSize = 256;
     private readonly Random _random;
-    private readonly byte[] _pixelBytes = new byte[PreviewImageSize * PreviewImageSize * Unsafe.SizeOf<Rgba32>()];
+    private readonly byte[] _pixelBytes = new byte[PreviewImageSize * PreviewImageSize * 4 * 8];
     private int _currentTileIndex;
     private BitmapImage? _imageSource;
 
@@ -77,29 +73,32 @@ public class TileCollection : ITileLibraryItem, ITileSource, INotifyPropertyChan
 
     private async void SetImageSourceAsync()
     {
-        var image = new Image<Rgba32>(PreviewImageSize, PreviewImageSize);
+        var bitmap = new SKBitmap(PreviewImageSize, PreviewImageSize);
+        using var canvas = new SKCanvas(bitmap);
+        canvas.Clear();
 
-        // Create Collection Preview Image from 3 child Tiles using ImageSharp
-        image.Mutate(x =>
+        // Create Collection Preview Image from 3 child Tiles using SkiaSharp
+
+        Stream? stream;
+        if (Tiles.Any())
         {
-            if (Tiles.Any())
+            for (int i = 2; i >= 0; i--)
             {
-                for (int i = 2; i >= 0; i--)
+                using (stream = Tiles[i % Tiles.Count].GetPreviewImageStream())
                 {
-                    using var stream = Tiles[i % Tiles.Count].GetPreviewImageStream();
-                    var subImage = Image.Load(stream);
-                    subImage.Mutate(y => y.Resize(200, 200));
-                    x.DrawImage(subImage, new Point(10 + i * 20, 10 + i * 20), PixelColorBlendingMode.Normal, PixelAlphaCompositionMode.SrcOver, 1);
+                    var subImage = SKBitmap.Decode(stream);
+                    var destRect = new SKRect(10 + i * 20f, (10 + i * 20f), (210 + i * 20f), (210 + i * 20f));
+                    canvas.DrawBitmap(subImage, destRect);
                 }
             }
-            else
-            {
-                x.Fill(Color.Magenta);
-            }
-        });
+        }
+        else
+        {
+            canvas.Clear(SKColors.Magenta);
+        }
 
-        using var stream = GetPreviewImageStream();
-        await image.SaveAsPngAsync(stream);
+        stream = GetPreviewImageStream();
+        bitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
         stream.Position = 0;
 
         using var randomAccessStream = stream.AsRandomAccessStream();

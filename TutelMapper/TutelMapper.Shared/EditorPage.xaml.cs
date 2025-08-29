@@ -99,7 +99,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         {
             if (VM.SomethingChanged)
             {
-                Canvas.Invalidate();
+                MapCanvas.Invalidate();
                 VM.SomethingChanged = false;
             }
 
@@ -137,7 +137,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
         var newPosition = pointer.Position.ToSKPoint();
         var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
 
@@ -160,7 +160,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
     private void OnPointerWheelScrolled(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
         var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
         if (pointerInfo == null)
             return;
@@ -183,7 +183,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
         if (pointer.PointerDevice.PointerDeviceType != PointerDeviceType.Touch && pointer.Properties.IsLeftButtonPressed)
             PaintingPointer = pointer.PointerId;
         else
@@ -192,7 +192,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
     private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
         if (pointer.PointerId == DraggingPointer)
             DraggingPointer = null;
 
@@ -202,18 +202,18 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
 
     private void OnPointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
         Pointers.Add(new PointerInfo(pointer.PointerId, pointer.PointerDevice.PointerDeviceType)
         {
             Position = pointer.Position.ToSKPoint()
         });
-        if (e.GetCurrentPoint(Canvas).PointerDevice.PointerDeviceType == PointerDeviceType.Touch)
+        if (e.GetCurrentPoint(MapCanvas).PointerDevice.PointerDeviceType == PointerDeviceType.Touch)
             DraggingPointer = pointer.PointerId;
     }
 
     private void OnPointerExited(object sender, PointerRoutedEventArgs e)
     {
-        var pointer = e.GetCurrentPoint(Canvas);
+        var pointer = e.GetCurrentPoint(MapCanvas);
 
         var pointerInfo = Pointers.FirstOrDefault(info => info.PointerId == pointer.PointerId);
         if (pointerInfo != null)
@@ -228,7 +228,7 @@ public sealed partial class EditorPage : Page, INotifyPropertyChanged
         if (VM.SelectedTile == null)
             return;
 
-        var point = e.GetPosition(Canvas).ToSKPoint();
+        var point = e.GetPosition(MapCanvas).ToSKPoint();
 
         ExecuteSelectedToolAt(point);
     }
